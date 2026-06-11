@@ -1,5 +1,8 @@
-// Componente de encabezado para mostrar el título, subtítulo y fecha
-// Recibe las props: titulo, subtitulo y fecha para personalizar el contenido del encabezado
+/**
+ * Componente de encabezado para mostrar el título, subtítulo y fecha
+ * Recibe las props: titulo, subtitulo y fecha para personalizar el contenido del encabezado
+ *  
+ * */ 
 export default function Header({titulo, subtitulo, fecha  }) {
     return(
         <header>

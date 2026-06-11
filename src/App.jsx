@@ -1,5 +1,6 @@
 import Header from './components/Header'
 import Botton from './components/Bottom'
+import HabitList from './components/HabitList'
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       fecha={new Date().toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long' })}
       />
       <Botton />
+    <HabitList />
     </div>
 
   )
