@@ -4,20 +4,27 @@
  * Cada hábito tiene un id y un nombre, y se muestra en una lista desordenada (ul) con cada hábito como un elemento de lista (li).
  *  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // Estado inicial con algunos hábitos predefinidos para mostrar en la lista
 export default function HabitList() {
-    const [habitos, setHabitos] = useState([
-        { id: 1, nombre: 'Leer', completado: false },
-        { id: 2, nombre: 'Ejercicio', completado: false },
-        { id: 3, nombre: 'Meditar', completado: false },
-    ])
+    const [habitos, setHabitos] = useState(() => {
+        const guardados = localStorage.getItem('habitos') // Si hay hábitos guardados en localStorage, los parseamos y los usamos como estado inicial
+        return guardados ? JSON.parse(guardados) : [// Si no hay hábitos guardados, usamos un estado inicial con algunos hábitos predefinidos
+            { id: 1, nombre: 'Leer', completado: false },
+            { id: 2, nombre: 'Ejercicio', completado: false },
+            { id: 3, nombre: 'Meditar', completado: false },
+        ]
+    })
     // Estado para manejar el valor del input del nuevo hábito
     const [input, setInput] = useState('')
 
-    // Función para agregar un nuevo hábito a la lista
+    // useEffect para guardar los hábitos en localStorage cada vez que cambian
+    useEffect(() => {
+        localStorage.setItem('habitos', JSON.stringify(habitos))
+    }, [habitos])
 
+    // Función para agregar un nuevo hábito a la lista
     function agregarHabito() {
         if (!input.trim()) return
         setHabitos([...habitos, { id: Date.now(), nombre: input }])
@@ -37,11 +44,13 @@ export default function HabitList() {
     const habitosCompletados = habitos.filter(h => h.completado).length
 
     // Renderiza la interfaz de usuario con un input para agregar nuevos hábitos y una lista de hábitos existentes
+    // Input para agregar un nuevo hábito, con un botón para agregarlo a la lista
+    // Lista de hábitos, cada uno con un checkbox para marcarlo como completado y un botón para eliminarlo
     return (
         <div>
             <p>{habitosCompletados} de {habitos.length} completados hoy</p>
+
             <div>
-                // Input para agregar un nuevo hábito, con un botón para agregarlo a la lista
                 <input
                     type="text"
                     placeholder="Nuevo hábito..."
