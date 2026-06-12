@@ -6,14 +6,17 @@
 
 import { useState } from 'react'
 
+// Estado inicial con algunos hábitos predefinidos para mostrar en la lista
 export default function HabitList() {
     const [habitos, setHabitos] = useState([
-        { id: 1, nombre: 'Leer' },
-        { id: 2, nombre: 'Ejercicio' },
-        { id: 3, nombre: 'Meditar' },
+        { id: 1, nombre: 'Leer', completado: false },
+        { id: 2, nombre: 'Ejercicio', completado: false },
+        { id: 3, nombre: 'Meditar', completado: false },
     ])
-
+    // Estado para manejar el valor del input del nuevo hábito
     const [input, setInput] = useState('')
+
+    // Función para agregar un nuevo hábito a la lista
 
     function agregarHabito() {
         if (!input.trim()) return
@@ -21,13 +24,24 @@ export default function HabitList() {
         setInput('')
     }
 
+    // Función para eliminar un hábito de la lista por su id
     function eliminarHabito(id) {
         setHabitos(habitos.filter(h => h.id !== id))
     }
 
+    function toggleHabito(id) {
+        setHabitos(habitos.map(h =>
+            h.id === id ? { ...h, completado: !h.completado } : h))
+    }
+
+    const habitosCompletados = habitos.filter(h => h.completado).length
+
+    // Renderiza la interfaz de usuario con un input para agregar nuevos hábitos y una lista de hábitos existentes
     return (
         <div>
+            <p>{habitosCompletados} de {habitos.length} completados hoy</p>
             <div>
+                // Input para agregar un nuevo hábito, con un botón para agregarlo a la lista
                 <input
                     type="text"
                     placeholder="Nuevo hábito..."
@@ -40,7 +54,12 @@ export default function HabitList() {
 
             <ul>
                 {habitos.map(habito => (
-                    <li key={habito.id}>
+                    <li key={habito.id} style={{ textDecoration: habito.completado ? 'line-through' : 'none' }}>
+                        <input
+                            type="checkbox"
+                            checked={habito.completado}
+                            onChange={() => toggleHabito(habito.id)}
+                        />
                         {habito.nombre}
                         <button onClick={() => eliminarHabito(habito.id)}>✕</button>
                     </li>
