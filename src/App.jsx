@@ -1,5 +1,4 @@
 import Header from './components/Header'
-import Botton from './components/Bottom'
 import HabitList from './components/HabitList'
 
 export default function App() {
@@ -10,7 +9,7 @@ export default function App() {
       subtitulo="Agrega tus habitos diarios"
       fecha={new Date().toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long' })}
       />
-      <Botton />
+      
     <HabitList />
     </div>
 

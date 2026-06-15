@@ -1,0 +1,19 @@
+.header {
+  max-width: 520px;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titulo {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.subtitulo {
+  font-size: 13px;
+  color: #888;
+  margin-top: 3px;
+  text-transform: capitalize;
+} 
