@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react'// Importamos los hooks useState y useEffect de React para manejar el estado y los efectos secundarios en el componente
 import styles from './HabitList.module.css' // Importamos el archivo de estilos CSS para el componente HabitList
+import HabitItem from './HabitIteam' // Importamos el componente HabitItem para renderizar cada hábito individualmente en la lista
 
 // Estado inicial con algunos hábitos predefinidos para mostrar en la lista
 export default function HabitList() {
@@ -57,23 +58,17 @@ export default function HabitList() {
                     placeholder="Nuevo hábito..."
                     value={input}
                     onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && agregarHabito()}/>
+                    onKeyDown={e => e.key === 'Enter' && agregarHabito()} />
                 <button className={styles.addBtn} onClick={agregarHabito}>Agregar</button>
             </div>
-
-            <ul className={styles.list} >
+            <ul className={styles.list}>
                 {habitos.map(habito => (
-                    <li key={habito.id} className={styles.item}>
-                        <input
-                            className={styles.checkbox}
-                            type="checkbox"
-                            checked={habito.completado}
-                            onChange={() => toggleHabito(habito.id)}
-                        />
-                        <span className={`${styles.nombre} ${habito.completado ? styles.nombreCompletado : ''}`}></span>
-                        {habito.nombre}
-                        <button className={styles.deleteBtn} onClick={() => eliminarHabito(habito.id)}>✕</button>
-                    </li>
+                    <HabitItem
+                        key={habito.id}
+                        habito={habito}
+                        onToggle={toggleHabito}
+                        onEliminar={eliminarHabito}
+                    />
                 ))}
             </ul>
         </div>
