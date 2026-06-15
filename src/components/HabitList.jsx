@@ -4,7 +4,8 @@
  * Cada hábito tiene un id y un nombre, y se muestra en una lista desordenada (ul) con cada hábito como un elemento de lista (li).
  *  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'// Importamos los hooks useState y useEffect de React para manejar el estado y los efectos secundarios en el componente
+import styles from './HabitList.module.css' // Importamos el archivo de estilos CSS para el componente HabitList
 
 // Estado inicial con algunos hábitos predefinidos para mostrar en la lista
 export default function HabitList() {
@@ -47,30 +48,31 @@ export default function HabitList() {
     // Input para agregar un nuevo hábito, con un botón para agregarlo a la lista
     // Lista de hábitos, cada uno con un checkbox para marcarlo como completado y un botón para eliminarlo
     return (
-        <div>
-            <p>{habitosCompletados} de {habitos.length} completados hoy</p>
-
-            <div>
+        <div className={styles.container}>
+            <p className={styles.progress}>{habitosCompletados} de {habitos.length} completados hoy</p>
+            <div className={styles.inputRow}>
                 <input
+                    className={styles.input}
                     type="text"
                     placeholder="Nuevo hábito..."
                     value={input}
                     onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && agregarHabito()}
-                />
-                <button onClick={agregarHabito}>Agregar</button>
+                    onKeyDown={e => e.key === 'Enter' && agregarHabito()}/>
+                <button className={styles.addBtn} onClick={agregarHabito}>Agregar</button>
             </div>
 
-            <ul>
+            <ul className={styles.list} >
                 {habitos.map(habito => (
-                    <li key={habito.id} style={{ textDecoration: habito.completado ? 'line-through' : 'none' }}>
+                    <li key={habito.id} className={styles.item}>
                         <input
+                            className={styles.checkbox}
                             type="checkbox"
                             checked={habito.completado}
                             onChange={() => toggleHabito(habito.id)}
                         />
+                        <span className={`${styles.nombre} ${habito.completado ? styles.nombreCompletado : ''}`}></span>
                         {habito.nombre}
-                        <button onClick={() => eliminarHabito(habito.id)}>✕</button>
+                        <button className={styles.deleteBtn} onClick={() => eliminarHabito(habito.id)}>✕</button>
                     </li>
                 ))}
             </ul>
