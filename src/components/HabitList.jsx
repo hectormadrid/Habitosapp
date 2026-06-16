@@ -50,7 +50,7 @@ export default function HabitList() {
     // Lista de hábitos, cada uno con un checkbox para marcarlo como completado y un botón para eliminarlo
     return (
         <div className={styles.container}>
-            <p className={styles.progress}>{habitosCompletados} de {habitos.length} completados hoy</p> // Muestra el progreso de hábitos completados
+            <p className={styles.progress}>{habitosCompletados} de {habitos.length} completados hoy</p> 
             <div className={styles.inputRow}>
                 <input
                     className={styles.input}
@@ -58,7 +58,7 @@ export default function HabitList() {
                     placeholder="Nuevo hábito..."
                     value={input}
                     onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && agregarHabito()} /> // Input para agregar un nuevo hábito, con un evento onKeyDown para agregar el hábito al presionar Enter
+                    onKeyDown={e => e.key === 'Enter' && agregarHabito()} /> 
                 <button className={styles.addBtn} onClick={agregarHabito}>Agregar</button>
             </div>
             <ul className={styles.list}>
