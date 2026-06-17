@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Header from './components/Header'
 import Tabs from './components/Tabs'
 import HabitList from './components/HabitList'
+import TaskList from './components/TaskList'
 
 export default function App() {
   const [tabActiva, setTabsActiva] = useState('habitos')
@@ -15,7 +16,7 @@ export default function App() {
       <Tabs activa={tabActiva} onChange={setTabsActiva} />
 
       {tabActiva === 'habitos' && <HabitList />}
-      {tabActiva === 'tareas' && <p style={{ textAlign: 'center', color: '#888' }}>Próximamente...</p>}
+      {tabActiva === 'tareas' && <TaskList />}
     </div>
 
   )
