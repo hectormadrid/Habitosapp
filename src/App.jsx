@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import Header from './components/Header'
 import Tabs from './components/Tabs'
 import HabitList from './components/HabitList'
 import TaskList from './components/TaskList'
@@ -25,10 +24,6 @@ export default function App() {
 
   return (
     <div>
-      <Header
-        titulo="Mis Hábitos"
-        subtitulo={new Date().toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long' })}
-      />
       <Tabs activa={tabActiva} onChange={setTabActiva} />
 
       {tabActiva === 'habitos' && (

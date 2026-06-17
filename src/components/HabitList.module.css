@@ -5,6 +5,9 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .title {
@@ -22,8 +25,8 @@
 
 .btn {
   background: transparent;
-  border: 0.5px solid var(--color-border-medium);
-  border-radius: var(--radius-md);
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 8px;
   padding: 8px 14px;
   font-size: 13px;
   cursor: pointer;
@@ -34,17 +37,17 @@
   transition: background 0.15s;
 }
 
-.btn:hover    { background: var(--color-bg); }
+.btn:hover    { background: rgba(0,0,0,0.04); }
 .btn:active   { transform: scale(0.98); }
 .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
 
 .btnPrimary {
-  background: var(--color-text);
-  color: var(--color-surface);
-  border-color: var(--color-text);
+  background: #1a1a1a;
+  color: white;
+  border-color: #1a1a1a;
 }
 
-.btnPrimary:hover { opacity: 0.85; background: var(--color-text); }
+.btnPrimary:hover { opacity: 0.85; background: #1a1a1a; }
 
 /* ── Círculo de progreso ─────────────────────────────────── */
 
@@ -71,6 +74,9 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 1rem;
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .weekLabel {
@@ -83,10 +89,12 @@
 /* ── Tabla ───────────────────────────────────────────────── */
 
 .tableWrapper {
-  width: 100%;
-  overflow-x: auto;           /* scroll horizontal en pantallas pequeñas */
-  border-radius: var(--radius-lg);
-  border: 0.5px solid var(--color-border);
+  max-width: 780px;
+  margin: 0 auto;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: white;
 }
 
 .table {
@@ -95,14 +103,13 @@
   font-size: 13px;
 }
 
-/* Cabecera: fila de nombres de día (Lu, Ma…) */
 .thHabit {
   text-align: left;
   padding: 10px 14px;
   font-weight: 600;
   font-size: 13px;
-  background: var(--color-bg);
-  border-bottom: 0.5px solid var(--color-border);
+  background: #f5f5f0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
   white-space: nowrap;
   min-width: 180px;
 }
@@ -113,17 +120,16 @@
   font-weight: 600;
   font-size: 12px;
   color: var(--color-text-muted);
-  background: var(--color-bg);
+  background: #f5f5f0;
   border-bottom: none;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   min-width: 48px;
 }
 
-/* Cabecera: fila de números de día (1, 2, 3…) */
 .thEmpty {
-  background: var(--color-bg);
-  border-bottom: 0.5px solid var(--color-border);
+  background: #f5f5f0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
 .thDayNum {
@@ -131,11 +137,10 @@
   padding: 2px 8px 8px;
   font-size: 13px;
   font-weight: 500;
-  background: var(--color-bg);
-  border-bottom: 0.5px solid var(--color-border);
+  background: #f5f5f0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
-/* Día actual resaltado */
 .thToday {
   color: #3b4ef8;
   font-weight: 700;
@@ -144,7 +149,7 @@
 /* ── Filas de hábitos ────────────────────────────────────── */
 
 .habitRow {
-  border-bottom: 0.5px solid var(--color-border);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
   transition: background 0.1s;
 }
 
@@ -153,10 +158,9 @@
 }
 
 .habitRow:hover {
-  background: var(--color-bg);
+  background: #fafaf8;
 }
 
-/* Celda del nombre del hábito */
 .tdHabit {
   padding: 10px 14px;
   display: flex;
@@ -188,39 +192,36 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--color-text-hint);
+  color: #b4b2a9;
   font-size: 13px;
   padding: 2px 4px;
   border-radius: 4px;
   display: flex;
   align-items: center;
-  opacity: 0;              /* oculto por defecto */
+  opacity: 0;
   transition: opacity 0.15s;
 }
 
-/* Muestra el botón editar al pasar el cursor sobre la fila */
 .habitRow:hover .editBtn {
   opacity: 1;
 }
 
 .editBtn:hover {
-  color: var(--color-text);
-  background: var(--color-border);
+  color: #1a1a1a;
+  background: rgba(0,0,0,0.06);
 }
 
-/* Celdas de checkbox */
 .tdCheck {
   text-align: center;
   padding: 8px 4px;
   vertical-align: middle;
 }
 
-/* Checkbox personalizado */
 .checkbox {
   width: 22px;
   height: 22px;
   border-radius: 4px;
-  border: 1.5px solid var(--color-border-medium);
+  border: 1.5px solid rgba(0,0,0,0.2);
   background: transparent;
   display: inline-flex;
   align-items: center;
@@ -235,7 +236,6 @@
   transform: scale(1.1);
 }
 
-/* Estado marcado */
 .checkboxDone {
   background: #3b4ef8;
   border-color: #3b4ef8;
@@ -244,7 +244,7 @@
 /* ── Pie de tabla ─────────────────────────────────────────── */
 
 .footerRow {
-  border-top: 0.5px solid var(--color-border);
+  border-top: 1px solid rgba(0,0,0,0.06);
 }
 
 .tdFooterLabel {
@@ -253,20 +253,17 @@
   font-weight: 600;
   color: var(--color-text-muted);
   white-space: nowrap;
-  background: var(--color-bg);
+  background: #f5f5f0;
 }
 
-/* Recuento numérico */
 .tdFooterCount {
   text-align: center;
   padding: 8px 4px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-text);
-  background: var(--color-bg);
+  background: #f5f5f0;
 }
 
-/* Porcentaje de progreso diario con color de fondo */
 .tdFooterPct {
   text-align: center;
   padding: 8px 4px;
@@ -276,23 +273,22 @@
   transition: background 0.3s;
 }
 
-/* Selector de horas de sueño */
 .tdSleep {
   text-align: center;
   padding: 6px 4px;
-  background: var(--color-bg);
+  background: #f5f5f0;
 }
 
 .sleepSelect {
   appearance: none;
   -webkit-appearance: none;
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-border-medium);
-  border-radius: var(--radius-sm);
+  background: white;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 6px;
   padding: 3px 8px;
   font-size: 12px;
   font-family: inherit;
-  color: var(--color-text);
+  color: #1a1a1a;
   cursor: pointer;
   text-align: center;
   width: 44px;
