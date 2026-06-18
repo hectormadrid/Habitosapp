@@ -1,16 +1,16 @@
 import { useState } from 'react'
-import { COLORS, DAYS_ES } from '../constants'
+import {  DAYS_ES } from '../constants'
 import { getWeekDates, dateKey, todayStr } from '../utils'
 import HabitModal from './HabitModal'
-import styles from './HabitList.module.css'
+import styles from './HabitTab.module.css'
 
 const SLEEP_OPTIONS = [4, 5, 6, 7, 8, 9, 10]
 
-export default function HabitsTab({ habits, setHabits, completions, setCompletions }) {
+export default function HabitTab({ habits, setHabits, completions, setCompletions }) {
     const [weekOffset, setWeekOffset] = useState(0)
     const [showModal, setShowModal] = useState(false)
     const [editHabit, setEditHabit] = useState(null)
-    const [form, setForm] = useState({ name: '', emoji: '💪', color: COLORS[0] })
+    const [form, setForm] = useState({ name: '', emoji: '💪'})
     const [sleep, setSleep] = useState(() => {
         try { return JSON.parse(localStorage.getItem('ht_sleep') || '{}') } catch { return {} }
     })
@@ -73,7 +73,7 @@ export default function HabitsTab({ habits, setHabits, completions, setCompletio
 
     function openAdd() {
         setEditHabit(null)
-        setForm({ name: '', emoji: '💪', color: COLORS[0] })
+        setForm({ name: '', emoji: '💪',   })
         setShowModal(true)
     }
 
@@ -82,7 +82,6 @@ export default function HabitsTab({ habits, setHabits, completions, setCompletio
         setForm({
             name: habit.name,
             emoji: habit.emoji,
-            color: COLORS.find(c => c.name === habit.colorName) || COLORS[0],
         })
         setShowModal(true)
     }
@@ -93,14 +92,14 @@ export default function HabitsTab({ habits, setHabits, completions, setCompletio
             setHabits(prev =>
                 prev.map(h =>
                     h.id === editHabit.id
-                        ? { ...h, name: form.name, emoji: form.emoji, colorName: form.color.name, colorDone: form.color.done }
+                        ? { ...h, name: form.name, emoji: form.emoji}
                         : h
                 )
             )
         } else {
             setHabits(prev => [
                 ...prev,
-                { id: Date.now().toString(), name: form.name, emoji: form.emoji, colorName: form.color.name, colorDone: form.color.done },
+                { id: Date.now().toString(), name: form.name, emoji: form.emoji},
             ])
         }
         setShowModal(false)
@@ -128,7 +127,7 @@ export default function HabitsTab({ habits, setHabits, completions, setCompletio
                     </p>
                 </div>
                 <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={openAdd}>
-                    <i className="ti ti-plus" aria-hidden="true" /> Nuevo
+                    <i className="ti ti-plus" aria-hidden="true" />Nuevo
                 </button>
             </div>
 
@@ -156,7 +155,7 @@ export default function HabitsTab({ habits, setHabits, completions, setCompletio
                     <i className="ti ti-arrow-left" aria-hidden="true" />
                 </button>
                 <span className={styles.weekLabel}>{weekLabel}</span>
-                <button className={styles.btn} onClick={() => setWeekOffset(o => o + 1)} disabled={weekOffset >= 0} style={{ opacity: weekOffset >= 0 ? 0.4 : 1 }}>
+                <button className={styles.btn} onClick={() => setWeekOffset(o => o + 1)} disabled={weekOffset >= 0} style={{ opacity: weekOffset >= 0 ? 0.4 : 1 }}> 
                     <i className="ti ti-arrow-right" aria-hidden="true" />
                 </button>
             </div>
@@ -261,6 +260,7 @@ export default function HabitsTab({ habits, setHabits, completions, setCompletio
             {showModal && (
                 <HabitModal form={form} setForm={setForm} onSave={saveHabit} onDelete={deleteHabit} onClose={() => setShowModal(false)} isEditing={!!editHabit} />
             )}
+
         </div>
     )
 }

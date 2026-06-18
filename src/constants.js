@@ -3,15 +3,6 @@ export const EMOJIS = [
   '🎨','🎵','🧠','❤️','⭐','🔥','🌟','🏋️','🚴','🍵'
 ]
 
-export const COLORS = [
-  { name: 'teal',   done: '#1D9E75', light: '#E1F5EE' },
-  { name: 'purple', done: '#7F77DD', light: '#EEEDFE' },
-  { name: 'coral',  done: '#D85A30', light: '#FAECE7' },
-  { name: 'blue',   done: '#378ADD', light: '#E6F1FB' },
-  { name: 'amber',  done: '#EF9F27', light: '#FAEEDA' },
-  { name: 'green',  done: '#639922', light: '#EAF3DE' },
-  { name: 'pink',   done: '#D4537E', light: '#FBEAF0' },
-]
 
 export const DAYS_ES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 

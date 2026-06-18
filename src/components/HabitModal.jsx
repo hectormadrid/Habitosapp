@@ -1,4 +1,4 @@
-import { EMOJIS, COLORS } from '../constants'
+import { EMOJIS } from '../constants'
 import styles from './HabitModal.module.css'
 
 /**
@@ -44,23 +44,6 @@ export default function HabitModal({ form, setForm, onSave, onDelete, onClose, i
               >
                 {em}
               </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Selector de color */}
-        <div className={styles.group}>
-          <label className={styles.label}>Color</label>
-          <div className={styles.colorGrid}>
-            {COLORS.map(c => (
-              <div
-                key={c.name}
-                className={`${styles.swatch} ${form.color.name === c.name ? styles.swatchSelected : ''}`}
-                style={{ background: c.done }}
-                onClick={() => setForm(f => ({ ...f, color: c }))}
-                role="button"
-                aria-label={c.name}
-              />
             ))}
           </div>
         </div>

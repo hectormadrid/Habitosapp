@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Tabs from './components/Tabs'
-import HabitList from './components/HabitList'
+import HabitTab from './components/HabitTab'
 import TaskList from './components/TaskList'
 
 export default function App() {
@@ -27,7 +27,7 @@ export default function App() {
       <Tabs activa={tabActiva} onChange={setTabActiva} />
 
       {tabActiva === 'habitos' && (
-        <HabitList
+        <HabitTab
           habits={habits}
           setHabits={setHabits}
           completions={completions}
