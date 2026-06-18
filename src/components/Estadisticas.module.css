@@ -1,0 +1,76 @@
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.titulo {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Tarjetas resumen ── */
+
+.resumenGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.resumenCard {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.resumenIcon {
+  font-size: 22px;
+}
+
+.resumenValor {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.resumenLabel {
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+}
+
+/* ── Gráficos ── */
+
+.graficoCard {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.graficoTitulo {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+/* ── Estado vacío ── */
+
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #888;
+  font-size: 14px;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+}

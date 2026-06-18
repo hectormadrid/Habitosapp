@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Tabs from './components/Tabs'
 import HabitTab from './components/HabitTab'
 import TaskList from './components/TaskList'
+import Estadisticas from './components/Estadisticas'
 
 export default function App() {
   const [tabActiva, setTabActiva] = useState('habitos')
@@ -35,6 +36,9 @@ export default function App() {
         />
       )}
       {tabActiva === 'tareas' && <TaskList />}
+       {tabActiva === 'estadisticas' && (
+        <Estadisticas habits={habits} completions={completions} />
+      )}
     </div>
   )
 }

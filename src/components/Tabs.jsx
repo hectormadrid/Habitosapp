@@ -16,6 +16,12 @@ export default function Tabs({ activa, onChange }) {
             >
                 Tareas
             </button>
+              <button
+                className={`${styles.tab} ${activa === 'estadisticas' ? styles.tabActiva : ''}`}
+                onClick={() => onChange('estadisticas')}
+            >
+                Estadisticas
+            </button>
         </nav>
     )
 }
