@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import {  DAYS_ES } from '../constants'
+import { DAYS_ES } from '../constants'
 import { getWeekDates, dateKey, todayStr } from '../utils'
 import HabitModal from './HabitModal'
 import styles from './HabitTab.module.css'
@@ -10,7 +10,7 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
     const [weekOffset, setWeekOffset] = useState(0)
     const [showModal, setShowModal] = useState(false)
     const [editHabit, setEditHabit] = useState(null)
-    const [form, setForm] = useState({ name: '', emoji: '💪'})
+    const [form, setForm] = useState({ name: '', emoji: '💪' })
     const [sleep, setSleep] = useState(() => {
         try { return JSON.parse(localStorage.getItem('ht_sleep') || '{}') } catch { return {} }
     })
@@ -64,6 +64,30 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
         }
         return streak
     }
+    // Racha más larga histórica de un hábito
+    function getBestStreak(habitId) {
+        let best = 0
+        let current = 0
+        const d = new Date()
+        d.setDate(d.getDate() - 365) // revisamos el último año
+
+        for (let i = 0; i < 365; i++) {
+            const key = `${habitId}_${dateKey(d)}`
+            if (completions[key]) {
+                current++
+                if (current > best) best = current
+            } else {
+                current = 0
+            }
+            d.setDate(d.getDate() + 1)
+        }
+        return best
+    }
+
+    // Cuántos hábitos completó hoy
+    function todayCompleted() {
+        return habits.filter(h => isDone(h.id, today)).length
+    }
 
     function setSleepDay(dateStr, hours) {
         const updated = { ...sleep, [dateStr]: hours }
@@ -73,7 +97,7 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
 
     function openAdd() {
         setEditHabit(null)
-        setForm({ name: '', emoji: '💪',   })
+        setForm({ name: '', emoji: '💪', })
         setShowModal(true)
     }
 
@@ -92,14 +116,14 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
             setHabits(prev =>
                 prev.map(h =>
                     h.id === editHabit.id
-                        ? { ...h, name: form.name, emoji: form.emoji}
+                        ? { ...h, name: form.name, emoji: form.emoji }
                         : h
                 )
             )
         } else {
             setHabits(prev => [
                 ...prev,
-                { id: Date.now().toString(), name: form.name, emoji: form.emoji},
+                { id: Date.now().toString(), name: form.name, emoji: form.emoji },
             ])
         }
         setShowModal(false)
@@ -130,6 +154,22 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
                     <i className="ti ti-plus" aria-hidden="true" />Nuevo
                 </button>
             </div>
+            {habits.length > 0 && (
+                <div className={styles.statsRow}>
+                    <div className={styles.statCard}>
+                        <span className={styles.statIcon}>✅</span>
+                        <span className={styles.statValue}>{todayCompleted()}/{habits.length}</span>
+                        <span className={styles.statLabel}>Hoy</span>
+                    </div>
+                    <div className={styles.statCard}>
+                        <span className={styles.statIcon}>⭐</span>
+                        <span className={styles.statValue}>
+                            {habits.length > 0 ? Math.max(...habits.map(h => getBestStreak(h.id))) : 0}
+                        </span>
+                        <span className={styles.statLabel}>Mejor racha</span>
+                    </div>
+                </div>
+            )}
 
             <div className={styles.progressSection}>
                 <p className={styles.progressTitle}>PROGRESO SEMANAL</p>
@@ -155,7 +195,7 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
                     <i className="ti ti-arrow-left" aria-hidden="true" />
                 </button>
                 <span className={styles.weekLabel}>{weekLabel}</span>
-                <button className={styles.btn} onClick={() => setWeekOffset(o => o + 1)} disabled={weekOffset >= 0} style={{ opacity: weekOffset >= 0 ? 0.4 : 1 }}> 
+                <button className={styles.btn} onClick={() => setWeekOffset(o => o + 1)} disabled={weekOffset >= 0} style={{ opacity: weekOffset >= 0 ? 0.4 : 1 }}>
                     <i className="ti ti-arrow-right" aria-hidden="true" />
                 </button>
             </div>

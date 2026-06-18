@@ -311,3 +311,39 @@
   gap: 0.75rem;
   font-size: 14px;
 }
+/* ── Estadísticas de racha ───────────────────────────────── */
+
+.statsRow {
+  display: flex;
+  gap: 12px;
+  max-width: 780px;
+  margin: 0 auto 1.5rem;
+}
+
+.statCard {
+  flex: 1;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.statIcon {
+  font-size: 22px;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+}
