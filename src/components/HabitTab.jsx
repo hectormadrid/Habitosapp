@@ -83,6 +83,28 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
         }
         return best
     }
+    // Devuelve todos los días del mes actual
+    function getDiasDelMes() {
+        const hoy = new Date()
+        const año = hoy.getFullYear()
+        const mes = hoy.getMonth()
+        const totalDias = new Date(año, mes + 1, 0).getDate()
+        return Array.from({ length: totalDias }, (_, i) => {
+            const d = new Date(año, mes, i + 1)
+            return dateKey(d)
+        })
+    }
+
+    // Color según el porcentaje del día
+    function colorDia(dateStr) {
+        const pct = dailyPercent(dateStr)
+        const esFuturo = dateStr > today
+        if (esFuturo) return '#f0f0ec'
+        if (pct === 0) return '#fee2e2'
+        if (pct <= 40) return '#fb923c'
+        if (pct <= 70) return '#86efac'
+        return '#22c55e'
+    }
 
     // Cuántos hábitos completó hoy
     function todayCompleted() {
@@ -294,6 +316,56 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
                             </tr>
                         </tfoot>
                     </table>
+                </div>
+            )}
+                {habits.length > 0 && (
+                <div className={styles.mesSection}>
+                    <h3 className={styles.mesTitulo}>
+                        Rachas del mes — {new Date().toLocaleDateString('es', { month: 'long', year: 'numeric' })}
+                    </h3>
+                    <div className={styles.mesGrid}>
+                        {getDiasDelMes().map(dk => {
+                            const dia = new Date(dk + 'T12:00:00')
+                            const esFuturo = dk > today
+                            return (
+                                <div
+                                    key={dk}
+                                    className={styles.mesDia}
+                                    style={{ background: colorDia(dk) }}
+                                    title={esFuturo ? '' : `${dia.getDate()} — ${dailyPercent(dk)}%`}
+                                >
+                                    <span className={styles.mesDiaNum}>{dia.getDate()}</span>
+                                    {!esFuturo && dailyPercent(dk) === 100 && (
+                                        <span className={styles.mesDiaCheck}>🔥</span>
+                                    )}
+                                </div>
+                            )
+                        })}
+                    </div>
+
+                    {/* Leyenda */}
+                    <div className={styles.mesLeyenda}>
+                        <div className={styles.leyendaItem}>
+                            <span className={styles.leyendaColor} style={{ background: '#22c55e' }} />
+                            100%
+                        </div>
+                        <div className={styles.leyendaItem}>
+                            <span className={styles.leyendaColor} style={{ background: '#86efac' }} />
+                            70–99%
+                        </div>
+                        <div className={styles.leyendaItem}>
+                            <span className={styles.leyendaColor} style={{ background: '#fb923c' }} />
+                            1–69%
+                        </div>
+                        <div className={styles.leyendaItem}>
+                            <span className={styles.leyendaColor} style={{ background: '#fee2e2' }} />
+                            0%
+                        </div>
+                        <div className={styles.leyendaItem}>
+                            <span className={styles.leyendaColor} style={{ background: '#f0f0ec' }} />
+                            Futuro
+                        </div>
+                    </div>
                 </div>
             )}
 
