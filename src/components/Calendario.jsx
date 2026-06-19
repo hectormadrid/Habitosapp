@@ -8,8 +8,8 @@ const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto'
 export default function Calendario({ habits, completions, notas, setNotas }) {
   const hoy = new Date()
 
-  const [mes, setMes]           = useState(hoy.getMonth())
-  const [año, setAño]           = useState(hoy.getFullYear())
+  const [mes, setMes] = useState(hoy.getMonth())
+  const [año, setAño] = useState(hoy.getFullYear())
   const [diaSeleccionado, setDiaSeleccionado] = useState(null)
   const [notaTexto, setNotaTexto] = useState('')
 
@@ -124,11 +124,10 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
                   className={`
                     ${styles.dia}
                     ${esHoy ? styles.diaHoy : ''}
-                    ${esFuturo ? styles.diaFuturo : ''}
                     ${seleccionado ? styles.diaSeleccionado : ''}
                   `}
                   style={{ background: color || undefined }}
-                  onClick={() => !esFuturo && seleccionarDia(dk)}
+                  onClick={() => seleccionarDia(dk)}
                   title={`${dia.getDate()} ${MESES[mes]} — ${getPorcentaje(dk)}%`}
                 >
                   <span className={styles.diaNum}>{dia.getDate()}</span>

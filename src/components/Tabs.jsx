@@ -22,7 +22,7 @@ export default function Tabs({ activa, onChange }) {
             <button
                 className={`${styles.tab} ${activa === 'calendario' ? styles.tabActiva : ''}`}
                 onClick={() => onChange('calendario')}>
-                calendario
+                Calendario
             </button>
         </nav>
     )

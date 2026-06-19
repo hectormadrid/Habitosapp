@@ -199,3 +199,86 @@ body.dark .recharts-tooltip-label {
 body.dark .recharts-surface {
   background: transparent;
 }
+
+/* ── Calendario modo oscuro ── */
+
+body.dark [class*="calendarSection"],
+body.dark [class*="panel"],
+body.dark [class*="panelVacio"] {
+  background: #1e1e1e;
+  border-color: rgba(255,255,255,0.08);
+}
+
+body.dark [class*="navBtn"] {
+  background: #2a2a2a;
+  border-color: rgba(255,255,255,0.1);
+  color: #e5e5e5;
+}
+
+body.dark [class*="navBtn"]:hover {
+  background: #333;
+}
+
+body.dark [class*="mesLabel"],
+body.dark [class*="panelTitulo"],
+body.dark [class*="panelProgresoNum"] {
+  color: #e5e5e5;
+}
+
+body.dark [class*="diaNum"] {
+  color: #000000;
+}
+
+
+body.dark [class*="dia"] {
+  background: #ffffff;
+}
+
+body.dark [class*="diaSeleccionado"] {
+  border-color: #e5e5e5;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+}
+
+body.dark [class*="panelProgreso"] {
+  border-bottom-color: rgba(255,255,255,0.06);
+}
+
+body.dark [class*="habitoDot"] {
+  border-color: rgba(255,255,255,0.2);
+}
+
+body.dark [class*="habitoNombre"] {
+  color: #e5e5e5;
+}
+
+body.dark [class*="notaInput"] {
+  background: #2a2a2a;
+  border-color: rgba(255,255,255,0.12);
+  color: #e5e5e5;
+}
+
+body.dark [class*="notaInput"]::placeholder {
+  color: #555;
+}
+
+body.dark [class*="guardarBtn"] {
+  background: #e5e5e5;
+  color: #1a1a1a;
+}
+
+body.dark [class*="cerrarBtn"]:hover {
+  background: rgba(255,255,255,0.08);
+  color: #e5e5e5;
+}
+
+body.dark [class*="panelProgresoLabel"],
+body.dark [class*="panelSeccionLabel"],
+body.dark [class*="leyendaItem"],
+body.dark [class*="panelVacio"] {
+  color: #888;
+}
+
+body.dark [class*="diaNum"] {
+  color: #000000;
+  background: transparent;
+}
