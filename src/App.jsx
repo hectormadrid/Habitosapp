@@ -15,6 +15,10 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ht_completions') || '{}') } catch { return {} }
   })
 
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('ht_dark') === 'true'
+  })
+
   useEffect(() => {
     localStorage.setItem('ht_habits', JSON.stringify(habits))
   }, [habits])
@@ -23,8 +27,42 @@ export default function App() {
     localStorage.setItem('ht_completions', JSON.stringify(completions))
   }, [completions])
 
+   useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark')
+    } else {
+      document.body.classList.remove('dark')
+    }
+    localStorage.setItem('ht_dark', darkMode)
+  }, [darkMode])
+
   return (
     <div>
+       <button
+        onClick={() => setDarkMode(d => !d)}
+        style={{
+          position: 'fixed',
+          bottom: '1.5rem',
+          right: '1.5rem',
+          width: 44,
+          height: 44,
+          borderRadius: '50%',
+          background: darkMode ? '#e5e5e5' : '#1a1a1a',
+          color: darkMode ? '#1a1a1a' : '#e5e5e5',
+          border: 'none',
+          fontSize: 20,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+          zIndex: 999,
+          cursor: 'pointer',
+          transition: 'background 0.2s, color 0.2s',
+        }}
+        aria-label="Cambiar modo"
+      >
+        {darkMode ? '☀️' : '🌙'}
+      </button>
       <Tabs activa={tabActiva} onChange={setTabActiva} />
 
       {tabActiva === 'habitos' && (

@@ -34,3 +34,31 @@ button {
 input, select {
   font-family: inherit;
 }
+/* ── Modo oscuro ─────────────────────────────────────────── */
+
+body.dark {
+  background-color: #111111;
+  color: #e5e5e5;
+}
+
+body.dark .habitCard,
+body.dark .modal,
+body.dark .statCard,
+body.dark .graficoCard,
+body.dark .resumenCard,
+body.dark .mesSection,
+body.dark .tableWrapper {
+  background: #1e1e1e;
+  border-color: rgba(255,255,255,0.08);
+}
+
+body.dark input,
+body.dark select {
+  background: #2a2a2a;
+  color: #e5e5e5;
+  border-color: rgba(255,255,255,0.15);
+}
+
+body.dark button {
+  color: #e5e5e5;
+}
