@@ -171,3 +171,31 @@ body.dark [class*="empty"] {
   border-color: rgba(255,255,255,0.08);
   color: #888;
 }
+
+/* Gráficos recharts */
+body.dark .recharts-cartesian-grid-horizontal line,
+body.dark .recharts-cartesian-grid-vertical line {
+  stroke: rgba(255,255,255,0.06);
+}
+
+body.dark .recharts-text {
+  fill: #ffffff;
+}
+
+body.dark .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #1e1e1e !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  color: #e5e5e5 !important;
+}
+
+body.dark .recharts-tooltip-item {
+  color: #e5e5e5 !important;
+}
+
+body.dark .recharts-tooltip-label {
+  color: #ffffff !important;
+}
+
+body.dark .recharts-surface {
+  background: transparent;
+}
