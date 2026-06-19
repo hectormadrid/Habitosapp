@@ -3,6 +3,7 @@ import Tabs from './components/Tabs'
 import HabitTab from './components/HabitTab'
 import TaskList from './components/TaskList'
 import Estadisticas from './components/Estadisticas'
+import Calendario from './components/Calendario'
 
 export default function App() {
   const [tabActiva, setTabActiva] = useState('habitos')
@@ -13,6 +14,10 @@ export default function App() {
 
   const [completions, setCompletions] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ht_completions') || '{}') } catch { return {} }
+  })
+
+  const [notas, setNotas] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ht_notas') || '{}') } catch { return {} }
   })
 
   const [darkMode, setDarkMode] = useState(() => {
@@ -76,6 +81,14 @@ export default function App() {
       {tabActiva === 'tareas' && <TaskList />}
        {tabActiva === 'estadisticas' && (
         <Estadisticas habits={habits} completions={completions} />
+      )}
+      {tabActiva === 'calendario' && (
+        <Calendario
+          habits={habits}
+          completions={completions}
+          notas={notas}
+          setNotas={setNotas}
+        />
       )}
     </div>
   )

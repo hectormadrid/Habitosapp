@@ -6,21 +6,23 @@ export default function Tabs({ activa, onChange }) {
         <nav className={styles.nav}>
             <button
                 className={`${styles.tab} ${activa === 'habitos' ? styles.tabActiva : ''}`}
-                onClick={() => onChange('habitos')}
-            >
+                onClick={() => onChange('habitos')}>
                 Hábitos
             </button>
             <button
                 className={`${styles.tab} ${activa === 'tareas' ? styles.tabActiva : ''}`}
-                onClick={() => onChange('tareas')}
-            >
+                onClick={() => onChange('tareas')}>
                 Tareas
             </button>
-              <button
+            <button
                 className={`${styles.tab} ${activa === 'estadisticas' ? styles.tabActiva : ''}`}
-                onClick={() => onChange('estadisticas')}
-            >
+                onClick={() => onChange('estadisticas')}>
                 Estadisticas
+            </button>
+            <button
+                className={`${styles.tab} ${activa === 'calendario' ? styles.tabActiva : ''}`}
+                onClick={() => onChange('calendario')}>
+                calendario
             </button>
         </nav>
     )
