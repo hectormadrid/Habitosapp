@@ -41,24 +41,133 @@ body.dark {
   color: #e5e5e5;
 }
 
-body.dark .habitCard,
-body.dark .modal,
-body.dark .statCard,
-body.dark .graficoCard,
-body.dark .resumenCard,
-body.dark .mesSection,
-body.dark .tableWrapper {
+/* Tabs */
+body.dark nav {
+  border-bottom-color: rgba(255,255,255,0.1);
+}
+
+body.dark nav button {
+  color: #888;
+}
+
+body.dark nav button.active,
+body.dark [class*="tabActiva"] {
+  color: #e5e5e5;
+  border-bottom-color: #e5e5e5;
+}
+
+/* Todas las tarjetas y superficies blancas */
+body.dark [class*="statCard"],
+body.dark [class*="resumenCard"],
+body.dark [class*="graficoCard"],
+body.dark [class*="mesSection"],
+body.dark [class*="modal"],
+body.dark [class*="habitCard"] {
+  background: #221f1f;
+  border-color: rgba(255,255,255,0.08);
+  color: #e5e5e5;
+  
+}
+/* Valores de las tarjetas */
+body.dark [class*="statValue"],
+body.dark [class*="resumenValor"],
+body.dark [class*="titulo"],
+body.dark [class*="statIcon"],
+body.dark [class*="resumenIcon"] {
+  color: #e5e5e5;
+}
+
+/* Tabla */
+body.dark [class*="tableWrapper"] {
   background: #1e1e1e;
   border-color: rgba(255,255,255,0.08);
 }
 
-body.dark input,
-body.dark select {
+body.dark [class*="thHabit"],
+body.dark [class*="thDay"],
+body.dark [class*="thEmpty"],
+body.dark [class*="thDayNum"],
+body.dark [class*="tdFooterLabel"],
+body.dark [class*="tdFooterCount"],
+body.dark [class*="tdSleep"] {
+  background: #181818;
+  color: #888;
+}
+
+body.dark [class*="habitRow"]:hover {
+  background: #252525;
+}
+
+body.dark [class*="habitRow"] {
+  border-bottom-color: rgba(255,255,255,0.06);
+}
+
+body.dark [class*="habitName"] {
+  color: #e5e5e5;
+}
+
+body.dark [class*="checkbox"] {
+  border-color: rgba(255,255,255,0.25);
+}
+
+body.dark [class*="footerRow"] {
+  border-top-color: rgba(255,255,255,0.06);
+}
+
+/* Inputs y selects */
+body.dark input[type="text"],
+body.dark select,
+body.dark [class*="sleepSelect"] {
   background: #2a2a2a;
   color: #e5e5e5;
   border-color: rgba(255,255,255,0.15);
 }
 
-body.dark button {
+body.dark input[type="text"]::placeholder {
+  color: #555;
+}
+
+/* Botones */
+body.dark [class*="btn"]:not([class*="btnPrimary"]) {
+  border-color: rgba(255,255,255,0.15);
   color: #e5e5e5;
+}
+
+body.dark [class*="btn"]:not([class*="btnPrimary"]):hover {
+  background: rgba(255,255,255,0.06);
+}
+
+/* Textos secundarios */
+body.dark [class*="subtitle"],
+body.dark [class*="statLabel"],
+body.dark [class*="resumenLabel"],
+body.dark [class*="graficoTitulo"],
+body.dark [class*="mesTitulo"],
+body.dark [class*="progress"],
+body.dark [class*="weekLabel"],
+body.dark [class*="progressTitle"] {
+  color: #ffffff;
+}
+
+/* Tareas */
+body.dark [class*="item"] {
+  background: #1e1e1e;
+  border-color: rgba(255,255,255,0.08);
+  color: #e5e5e5;
+}
+
+body.dark [class*="completadasLabel"] {
+  color: #555;
+}
+
+/* Backdrop del modal */
+body.dark [class*="backdrop"] {
+  background: rgba(0,0,0,0.7);
+}
+
+/* Estadísticas vacío */
+body.dark [class*="empty"] {
+  background: #1e1e1e;
+  border-color: rgba(255,255,255,0.08);
+  color: #888;
 }
