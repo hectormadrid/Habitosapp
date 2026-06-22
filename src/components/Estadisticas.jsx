@@ -66,7 +66,7 @@ export default function Estadisticas({ habits, completions }) {
             const completados = claves.filter(k => completions[k]).length
             const pct = totalDias > 0 ? Math.round((completados / totalDias) * 100) : 0
             return {
-                nombre: h.nombre || h.name,
+                name: h.name,
                 emoji: h.emoji,
                 porcentaje: pct,
                 dias: completados,
@@ -202,7 +202,7 @@ export default function Estadisticas({ habits, completions }) {
                                 <XAxis type="number" domain={[0, 100]} unit="%" tick={{ fontSize: 11 }} />
                                 <YAxis
                                     type="category"
-                                    dataKey="nombre"
+                                    dataKey="name"
                                     tick={{ fontSize: 12 }}
                                     width={90}
                                     tickFormatter={(val, i) => `${datosHabitos[i]?.emoji || ''} ${val}`}

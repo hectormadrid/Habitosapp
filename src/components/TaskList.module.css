@@ -5,7 +5,7 @@
 
 .progress {
   font-size: 14px;
-  color: #888;
+  color: var(--color-text-muted);
   margin-bottom: 1.25rem;
 }
 
@@ -18,11 +18,13 @@
 .input {
   flex: 1;
   padding: 10px 14px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 14px;
   outline: none;
-  background: white;
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color 0.15s;
 }
 
 .input:focus {
@@ -31,21 +33,29 @@
 
 .select {
   padding: 10px 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 13px;
-  background: white;
+  background: var(--color-surface);
+  color: var(--color-text);
   outline: none;
   cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.select:focus {
+  border-color: #3b4ef8;
 }
 
 .addBtn {
   padding: 10px 18px;
-  background: #1a1a1a;
-  color: white;
+  background: var(--color-text);
+  color: var(--color-surface);
   border: none;
   border-radius: 8px;
   font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.15s;
 }
 
 .addBtn:hover {
@@ -63,10 +73,11 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: white;
-  border: 1px solid #ebebeb;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 12px 14px;
+  color: var(--color-text);
 }
 
 .itemCompletado {
@@ -88,7 +99,7 @@
 
 .textoCompletado {
   text-decoration: line-through;
-  color: #aaa;
+  color: var(--color-text-hint);
 }
 
 .badge {
@@ -99,22 +110,23 @@
   flex-shrink: 0;
 }
 
-.alta  { background: #fcebeb; color: #a32d2d; }
-.media { background: #faeeda; color: #633806; }
-.baja  { background: #e1f5ee; color: #085041; }
+.alta  { background: var(--color-badge-high-bg); color: var(--color-badge-high-fg); }
+.media { background: var(--color-badge-med-bg); color: var(--color-badge-med-fg); }
+.baja  { background: var(--color-badge-low-bg); color: var(--color-badge-low-fg); }
 
 .deleteBtn {
   background: transparent;
   border: none;
-  color: #ccc;
+  color: var(--color-text-hint);
   font-size: 16px;
   padding: 2px 6px;
   border-radius: 4px;
+  transition: color 0.15s, background-color 0.15s;
 }
 
 .deleteBtn:hover {
   color: #e24b4a;
-  background: #fcebeb;
+  background: var(--color-badge-high-bg);
 }
 
 .completadas {
@@ -124,7 +136,7 @@
 .completadasLabel {
   font-size: 12px;
   font-weight: 600;
-  color: #aaa;
+  color: var(--color-text-hint);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 8px;

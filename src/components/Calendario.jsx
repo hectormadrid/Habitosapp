@@ -34,12 +34,12 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
   }
 
   function getColorDia(dk, esFuturo) {
-    if (esFuturo) return ''
+    if (esFuturo) return null
     const pct = getPorcentaje(dk)
-    if (pct === 0)   return '#fee2e2'
-    if (pct <= 40)   return '#fb923c'
-    if (pct <= 70)   return '#86efac'
-    return '#22c55e'
+    if (pct === 0)   return { bg: 'var(--color-pct-0)', fg: 'var(--color-pct-text-0)' }
+    if (pct <= 40)   return { bg: 'var(--color-pct-1)', fg: 'var(--color-pct-text-1)' }
+    if (pct <= 70)   return { bg: 'var(--color-pct-2)', fg: 'var(--color-pct-text-2)' }
+    return { bg: 'var(--color-pct-3)', fg: 'var(--color-pct-text-3)' }
   }
 
   function getHabitosDelDia(dk) {
@@ -114,7 +114,9 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
               const dk       = dateKey(dia)
               const esFuturo = dia > hoy && dk !== todayKey
               const esHoy    = dk === todayKey
-              const color    = getColorDia(dk, esFuturo)
+              const colors   = getColorDia(dk, esFuturo)
+              const bg       = colors ? colors.bg : undefined
+              const fg       = colors ? colors.fg : 'var(--color-text)'
               const tieneNota = !!notas[dk]
               const seleccionado = diaSeleccionado === dk
 
@@ -126,11 +128,11 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
                     ${esHoy ? styles.diaHoy : ''}
                     ${seleccionado ? styles.diaSeleccionado : ''}
                   `}
-                  style={{ background: color || undefined }}
+                  style={{ background: bg || undefined, color: fg }}
                   onClick={() => seleccionarDia(dk)}
                   title={`${dia.getDate()} ${MESES[mes]} — ${getPorcentaje(dk)}%`}
                 >
-                  <span className={styles.diaNum}>{dia.getDate()}</span>
+                  <span className={styles.diaNum} style={{ color: fg }}>{dia.getDate()}</span>
                   {tieneNota && <span className={styles.notaDot}>•</span>}
                 </div>
               )
@@ -183,7 +185,7 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
                       {h.completado ? '✓' : ''}
                     </span>
                     <span className={styles.habitoNombre}>
-                      {h.emoji} {h.name || h.nombre}
+                      {h.emoji} {h.name}
                     </span>
                   </li>
                 ))}

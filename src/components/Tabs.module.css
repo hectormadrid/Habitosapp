@@ -3,7 +3,7 @@
   margin: 0 auto 1.5rem;
   display: flex;
   gap: 4px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--color-border);
   padding: 0 1rem;
 }
 
@@ -14,16 +14,16 @@
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 500;
-  color: #888;
+  color: var(--color-text-muted);
   margin-bottom: -1px;
   transition: color 0.15s;
 }
 
 .tab:hover {
-  color: #1a1a1a;
+  color: var(--color-text);
 }
 
 .tabActiva {
-  color: #1a1a1a;
-  border-bottom-color: #1a1a1a;
+  color: var(--color-text);
+  border-bottom-color: var(--color-text);
 }

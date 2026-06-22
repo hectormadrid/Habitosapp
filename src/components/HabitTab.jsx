@@ -49,10 +49,10 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
     }
 
     function progressColor(pct) {
-        if (pct === 100) return '#22c55e'
-        if (pct >= 70) return '#86efac'
-        if (pct >= 40) return '#fb923c'
-        return '#f87171'
+        if (pct === 100) return 'var(--color-pct-3)'
+        if (pct >= 70) return 'var(--color-pct-2)'
+        if (pct >= 40) return 'var(--color-pct-1)'
+        return 'var(--color-pct-0)'
     }
 
     function getStreak(habitId) {
@@ -99,11 +99,11 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
     function colorDia(dateStr) {
         const pct = dailyPercent(dateStr)
         const esFuturo = dateStr > today
-        if (esFuturo) return '#f0f0ec'
-        if (pct === 0) return '#fee2e2'
-        if (pct <= 40) return '#fb923c'
-        if (pct <= 70) return '#86efac'
-        return '#22c55e'
+        if (esFuturo) return { bg: 'var(--color-empty-future)', fg: 'var(--color-text-hint)' }
+        if (pct === 0) return { bg: 'var(--color-pct-0)', fg: 'var(--color-pct-text-0)' }
+        if (pct <= 40) return { bg: 'var(--color-pct-1)', fg: 'var(--color-pct-text-1)' }
+        if (pct <= 70) return { bg: 'var(--color-pct-2)', fg: 'var(--color-pct-text-2)' }
+        return { bg: 'var(--color-pct-3)', fg: 'var(--color-pct-text-3)' }
     }
 
     // Cuántos hábitos completó hoy
@@ -327,14 +327,15 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
                         {getDiasDelMes().map(dk => {
                             const dia = new Date(dk + 'T12:00:00')
                             const esFuturo = dk > today
+                            const colors = colorDia(dk)
                             return (
                                 <div
                                     key={dk}
                                     className={styles.mesDia}
-                                    style={{ background: colorDia(dk) }}
+                                    style={{ background: colors.bg, color: colors.fg }}
                                     title={esFuturo ? '' : `${dia.getDate()} — ${dailyPercent(dk)}%`}
                                 >
-                                    <span className={styles.mesDiaNum}>{dia.getDate()}</span>
+                                    <span className={styles.mesDiaNum} style={{ color: colors.fg }}>{dia.getDate()}</span>
                                     {!esFuturo && dailyPercent(dk) === 100 && (
                                         <span className={styles.mesDiaCheck}>🔥</span>
                                     )}
