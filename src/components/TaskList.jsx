@@ -9,6 +9,7 @@ export default function TaskList() {
 
   const [input, setInput] = useState('')
   const [prioridad, setPrioridad] = useState('media')
+  const [fechaLimite, setFechaLimite] = useState('')
 
   useEffect(() => {
     localStorage.setItem('tareas', JSON.stringify(tareas))
@@ -20,10 +21,12 @@ export default function TaskList() {
       id: Date.now(),
       texto: input,
       prioridad,
+      fechaLimite,
       completada: false,
     }])
     setInput('')
     setPrioridad('media')
+    setFechaLimite('')
   }
 
   function toggleTarea(id) {
@@ -36,9 +39,14 @@ export default function TaskList() {
     setTareas(tareas.filter(t => t.id !== id))
   }
 
-  const pendientes  = tareas.filter(t => !t.completada)
+  const pendientes = tareas.filter(t => !t.completada)
   const completadas = tareas.filter(t => t.completada)
 
+  function estaVencida(tarea) {
+    if (!tarea.fechaLimite || tarea.completada) return false
+
+    return new Date(tarea.fechaLimite) < new Date()
+  }
   return (
     <div className={styles.container}>
       <p className={styles.progress}>
@@ -53,6 +61,12 @@ export default function TaskList() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && agregarTarea()}
+        />
+        <input
+          className={styles.input}
+          type="date"
+          value={fechaLimite}
+          onChange={e => setFechaLimite(e.target.value)}
         />
         <select
           className={styles.select}
@@ -76,6 +90,17 @@ export default function TaskList() {
               onChange={() => toggleTarea(tarea.id)}
             />
             <span className={styles.texto}>{tarea.texto}</span>
+            {tarea.fechaLimite && (
+              <span className={styles.fecha}>
+                📅 {tarea.fechaLimite}
+              </span>
+            )}
+
+            {estaVencida(tarea) && (
+              <span className={styles.vencida}>
+                ⚠️ Vencida
+              </span>
+            )}
             <span className={`${styles.badge} ${styles[tarea.prioridad]}`}>
               {tarea.prioridad}
             </span>
@@ -97,6 +122,11 @@ export default function TaskList() {
                   onChange={() => toggleTarea(tarea.id)}
                 />
                 <span className={`${styles.texto} ${styles.textoCompletado}`}>{tarea.texto}</span>
+                {tarea.fechaLimite && (
+                  <span className={styles.fecha}>
+                    📅 {tarea.fechaLimite}
+                  </span>
+                )}
                 <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
               </li>
             ))}
