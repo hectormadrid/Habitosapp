@@ -85,7 +85,7 @@ export default function TaskList() {
   function estaVencida(tarea) {
     if (!tarea.fechaLimite || tarea.completada) return false
 
-    return new Date(tarea.fechaLimite) < new Date()
+    return new Date(`${tarea.fechaLimite}T00:00:00`) < new Date()
   }
 
 
@@ -136,8 +136,8 @@ export default function TaskList() {
             {tarea.fechaLimite && (
               <span className={styles.fecha}>
                 📅 {format(
-                  new Date(tarea.fechaLimite),
-                  'dd MMM yyyy',
+                  new Date(`${tarea.fechaLimite}T00:00:00`),
+                  'dd MMM',
                   { locale: es }
                 )}
               </span>
@@ -170,10 +170,15 @@ export default function TaskList() {
                 />
                 <span className={`${styles.texto} ${styles.textoCompletado}`}>{tarea.texto}</span>
                 {tarea.fechaLimite && (
-                  <span className={styles.fecha}>
-                    📅 {tarea.fechaLimite}
-                  </span>
+              <span className={styles.fecha}>
+                📅 {format(
+                  new Date(`${tarea.fechaLimite}T00:00:00`),
+                  'dd MMM',
+                  { locale: es }
                 )}
+              </span>
+            )}
+
                 <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
               </li>
             ))}
