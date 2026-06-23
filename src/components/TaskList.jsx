@@ -12,6 +12,7 @@ export default function TaskList() {
   const [input, setInput] = useState('')
   const [prioridad, setPrioridad] = useState('media')
   const [fechaLimite, setFechaLimite] = useState('')
+  const [filtro, setFiltro] = useState('todas')
 
   useEffect(() => {
     localStorage.setItem('tareas', JSON.stringify(tareas))
@@ -74,14 +75,17 @@ export default function TaskList() {
     })
   }
 
-  const pendientes = ordenarTareas(
-    tareas.filter(t => !t.completada)
+  const tareasFiltradas = ordenarTareas(
+    filtrarTareas(tareas)
   )
 
-  const completadas = tareas.filter(
+  const pendientes = tareasFiltradas.filter(
+    t => !t.completada
+  )
+
+  const completadas = tareasFiltradas.filter(
     t => t.completada
   )
-
   function estaVencida(tarea) {
     if (!tarea.fechaLimite || tarea.completada) return false
 
@@ -89,12 +93,92 @@ export default function TaskList() {
   }
 
 
+  function filtrarTareas(lista) {
 
+    const hoy = new Date()
+    hoy.setHours(0, 0, 0, 0)
+
+    if (filtro === 'pendientes') {
+      return lista.filter(t => !t.completada)
+    }
+
+
+    if (filtro === 'completadas') {
+      return lista.filter(t => t.completada)
+    }
+
+
+    if (filtro === 'hoy') {
+      return lista.filter(t => {
+
+        if (!t.fechaLimite) return false
+
+        const fecha = new Date(
+          `${t.fechaLimite}T00:00:00`
+        )
+
+        return fecha.getTime() === hoy.getTime()
+      })
+    }
+
+
+    if (filtro === 'vencidas') {
+      return lista.filter(t => {
+
+        if (!t.fechaLimite || t.completada)
+          return false
+
+        return new Date(
+          `${t.fechaLimite}T00:00:00`
+        ) < hoy
+      })
+    }
+
+
+    return lista
+  }
   return (
     <div className={styles.container}>
       <p className={styles.progress}>
         {pendientes.length} pendientes · {completadas.length} completadas
       </p>
+      <div className={styles.filtros}>
+
+        <button
+          onClick={() => setFiltro('todas')}
+        >
+          📋 Todas
+        </button>
+
+
+        <button
+          onClick={() => setFiltro('pendientes')}
+        >
+          ⏳ Pendientes
+        </button>
+
+
+        <button
+          onClick={() => setFiltro('completadas')}
+        >
+          ✅ Completadas
+        </button>
+
+
+        <button
+          onClick={() => setFiltro('hoy')}
+        >
+          📅 Hoy
+        </button>
+
+
+        <button
+          onClick={() => setFiltro('vencidas')}
+        >
+          ⚠️ Vencidas
+        </button>
+
+      </div>
 
       <div className={styles.inputRow}>
         <input
@@ -170,14 +254,14 @@ export default function TaskList() {
                 />
                 <span className={`${styles.texto} ${styles.textoCompletado}`}>{tarea.texto}</span>
                 {tarea.fechaLimite && (
-              <span className={styles.fecha}>
-                📅 {format(
-                  new Date(`${tarea.fechaLimite}T00:00:00`),
-                  'dd MMM',
-                  { locale: es }
+                  <span className={styles.fecha}>
+                    📅 {format(
+                      new Date(`${tarea.fechaLimite}T00:00:00`),
+                      'dd MMM',
+                      { locale: es }
+                    )}
+                  </span>
                 )}
-              </span>
-            )}
 
                 <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
               </li>
