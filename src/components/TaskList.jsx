@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import styles from './TaskList.module.css'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 export default function TaskList() {
   const [tareas, setTareas] = useState(() => {
@@ -38,15 +40,56 @@ export default function TaskList() {
   function eliminarTarea(id) {
     setTareas(tareas.filter(t => t.id !== id))
   }
+  function ordenarTareas(lista) {
+    const pesoPrioridad = {
+      alta: 1,
+      media: 2,
+      baja: 3
+    }
 
-  const pendientes = tareas.filter(t => !t.completada)
-  const completadas = tareas.filter(t => t.completada)
+    return [...lista].sort((a, b) => {
+
+      // Primero fechas
+      if (a.fechaLimite && b.fechaLimite) {
+        const diferencia =
+          new Date(a.fechaLimite) -
+          new Date(b.fechaLimite)
+
+        if (diferencia !== 0)
+          return diferencia
+      }
+
+      // Con fecha antes que sin fecha
+      if (a.fechaLimite && !b.fechaLimite)
+        return -1
+
+      if (!a.fechaLimite && b.fechaLimite)
+        return 1
+
+
+      // Luego prioridad
+      return pesoPrioridad[a.prioridad] -
+        pesoPrioridad[b.prioridad]
+
+    })
+  }
+
+  const pendientes = ordenarTareas(
+    tareas.filter(t => !t.completada)
+  )
+
+  const completadas = tareas.filter(
+    t => t.completada
+  )
 
   function estaVencida(tarea) {
     if (!tarea.fechaLimite || tarea.completada) return false
 
     return new Date(tarea.fechaLimite) < new Date()
   }
+
+
+
   return (
     <div className={styles.container}>
       <p className={styles.progress}>
@@ -92,7 +135,11 @@ export default function TaskList() {
             <span className={styles.texto}>{tarea.texto}</span>
             {tarea.fechaLimite && (
               <span className={styles.fecha}>
-                📅 {tarea.fechaLimite}
+                📅 {format(
+                  new Date(tarea.fechaLimite),
+                  'dd MMM yyyy',
+                  { locale: es }
+                )}
               </span>
             )}
 
