@@ -159,7 +159,31 @@
 }
 
 
-.filtros button{
-  padding:6px 12px;
+.filtroBtn{
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  background:#ffffff;
+  color:#333;
   cursor:pointer;
+  transition:0.2s;
+}
+
+
+.filtroBtn:hover{
+  transform:translateY(-1px);
+}
+:global(.dark) .filtroBtn{
+
+  background:#17191b;
+  color:#f9fafb;
+  border-color:#7a7a7a;
+
+}
+
+
+:global(.dark) .filtroBtn:hover{
+
+  background:#374151;
+
 }

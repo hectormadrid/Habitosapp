@@ -145,34 +145,35 @@ export default function TaskList() {
       <div className={styles.filtros}>
 
         <button
+          className={styles.filtroBtn}
           onClick={() => setFiltro('todas')}
         >
           📋 Todas
         </button>
 
-
         <button
+          className={styles.filtroBtn}
           onClick={() => setFiltro('pendientes')}
         >
           ⏳ Pendientes
         </button>
 
-
         <button
+          className={styles.filtroBtn}
           onClick={() => setFiltro('completadas')}
         >
           ✅ Completadas
         </button>
 
-
         <button
+          className={styles.filtroBtn}
           onClick={() => setFiltro('hoy')}
         >
           📅 Hoy
         </button>
 
-
         <button
+          className={styles.filtroBtn}
           onClick={() => setFiltro('vencidas')}
         >
           ⚠️ Vencidas
