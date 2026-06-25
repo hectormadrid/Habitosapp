@@ -13,6 +13,8 @@ export default function TaskList() {
   const [prioridad, setPrioridad] = useState('media')
   const [fechaLimite, setFechaLimite] = useState('')
   const [filtro, setFiltro] = useState('todas')
+  const [horaRecordatorio, setHoraRecordatorio] = useState('')
+  const [anticipacion, setAnticipacion] = useState(1)
 
   useEffect(() => {
     localStorage.setItem('tareas', JSON.stringify(tareas))
@@ -25,11 +27,15 @@ export default function TaskList() {
       texto: input,
       prioridad,
       fechaLimite,
-      completada: false,
+      horaRecordatorio,
+      anticipacion,
+      completada: false
     }])
     setInput('')
     setPrioridad('media')
     setFechaLimite('')
+    setHoraRecordatorio('')
+    setAnticipacion(1)
   }
 
   function toggleTarea(id) {
@@ -196,6 +202,27 @@ export default function TaskList() {
           value={fechaLimite}
           onChange={e => setFechaLimite(e.target.value)}
         />
+        <input
+          className={styles.input}
+          type="time"
+          value={horaRecordatorio}
+          onChange={e => setHoraRecordatorio(e.target.value)}
+        />
+        <select
+          className={styles.select}
+          value={anticipacion}
+          onChange={e => setAnticipacion(Number(e.target.value))}
+        >
+
+          <option value="1">
+            ⏰ 1 hora antes
+          </option>
+
+          <option value="2">
+            ⏰ 2 horas antes
+          </option>
+
+        </select>
         <select
           className={styles.select}
           value={prioridad}
