@@ -16,85 +16,7 @@ export default function TaskList() {
   const [horaTarea, setHoraTarea] = useState('')
   const [tieneHora, setTieneHora] = useState(false)
 
-  const revisarRecordatorios = useCallback(() => {
-
-    const ahora = new Date()
-
-
-    tareas.forEach(tarea => {
-
-      if (
-        tarea.completada ||
-        !tarea.fechaLimite ||
-        !tarea.horaRecordatorio
-      ) {
-        return
-      }
-
-
-      const fechaHora = new Date(
-        `${tarea.fechaLimite}T${tarea.horaRecordatorio}`
-      )
-
-
-      fechaHora.setHours(
-        fechaHora.getHours() - tarea.anticipacion
-      )
-
-
-      const diferencia = fechaHora - ahora
-
-
-      if (
-        diferencia <= 60000 &&
-        diferencia > 0
-      ) {
-
-        new Notification(
-          "🔔 Recordatorio",
-          {
-            body:
-              `${tarea.texto} vence en ${tarea.anticipacion} hora(s)`
-          }
-        )
-
-      }
-
-    })
-
-  }, [tareas])
-  useEffect(() => {
-
-    if ("Notification" in window) {
-
-      if (Notification.permission !== "granted") {
-
-        Notification.requestPermission()
-
-      }
-
-    }
-
-  }, [])
-  useEffect(() => {
-
-    const intervalo = setInterval(() => {
-
-      revisarRecordatorios()
-
-    }, 60000)
-
-
-    return () => clearInterval(intervalo)
-
-
-  }, [revisarRecordatorios])
-
-  useEffect(() => {
-
-    localStorage.setItem('tareas', JSON.stringify(tareas))
-
-  }, [tareas])
+  
 
   function agregarTarea() {
     if (!input.trim()) return
@@ -112,6 +34,77 @@ export default function TaskList() {
     setHoraTarea('')
     setTieneHora(false)
   }
+  const revisarRecordatorios = useCallback(()=>{
+  const ahora = new Date()
+  tareas.forEach(tarea=>{
+
+    if(
+      tarea.completada ||
+      !tarea.fechaLimite ||
+      !tarea.horaTarea
+    ){
+      return
+    }
+
+    const inicioTarea = new Date(
+      `${tarea.fechaLimite}T${tarea.horaTarea}`
+    )
+
+    const diferencia =
+      inicioTarea - ahora
+    if(
+      diferencia <= 3600000 &&
+      diferencia > 3540000
+    ){
+      new Notification(
+        "🔔 Recordatorio",
+        {
+          body:
+          `Tu tarea "${tarea.texto}" empieza en 1 hora`
+        }
+      )
+    }
+  })
+
+},[tareas])
+
+  useEffect(() => {
+
+    if ("Notification" in window) {
+
+      if (Notification.permission !== "granted") {
+
+        Notification.requestPermission()
+
+      }
+
+    }
+
+  }, [])
+  useEffect(()=>{
+
+
+  revisarRecordatorios()
+
+
+  const intervalo = setInterval(()=>{
+
+    revisarRecordatorios()
+
+  },60000)
+
+
+
+  return ()=>clearInterval(intervalo)
+
+
+},[revisarRecordatorios])
+
+  useEffect(() => {
+
+    localStorage.setItem('tareas', JSON.stringify(tareas))
+
+  }, [tareas])
 
   function toggleTarea(id) {
     setTareas(tareas.map(t =>
@@ -169,46 +162,26 @@ export default function TaskList() {
     t => t.completada
   )
   function estaVencida(tarea) {
-
-
     if (
       !tarea.fechaLimite ||
       tarea.completada
     )
       return false
 
-
-
     let fechaVencimiento
-
-
     if (tarea.horaTarea) {
-
-
       fechaVencimiento =
         new Date(
           `${tarea.fechaLimite}T${tarea.horaTarea}`
         )
-
-
     } else {
-
-
       fechaVencimiento =
         new Date(
           `${tarea.fechaLimite}T23:59:59`
         )
-
-
     }
-
-
-
     return fechaVencimiento < new Date()
-
-
   }
-
 
   function filtrarTareas(lista) {
 
@@ -369,13 +342,13 @@ export default function TaskList() {
                 )}
               </span>
             )}
-             {tarea.horaTarea && (
+            {tarea.horaTarea && (
 
-                  <span className={styles.fecha}>
-                    ⏰ {tarea.horaTarea}
-                  </span>
+              <span className={styles.fecha}>
+                ⏰ {tarea.horaTarea}
+              </span>
 
-                )}
+            )}
             {estaVencida(tarea) && (
               <span className={styles.vencida}>
                 ⚠️ Vencida
