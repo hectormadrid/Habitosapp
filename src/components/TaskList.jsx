@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import styles from './TaskList.module.css'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -16,8 +16,84 @@ export default function TaskList() {
   const [horaRecordatorio, setHoraRecordatorio] = useState('')
   const [anticipacion, setAnticipacion] = useState(1)
 
+  const revisarRecordatorios = useCallback(() => {
+
+    const ahora = new Date()
+
+
+    tareas.forEach(tarea => {
+
+      if (
+        tarea.completada ||
+        !tarea.fechaLimite ||
+        !tarea.horaRecordatorio
+      ) {
+        return
+      }
+
+
+      const fechaHora = new Date(
+        `${tarea.fechaLimite}T${tarea.horaRecordatorio}`
+      )
+
+
+      fechaHora.setHours(
+        fechaHora.getHours() - tarea.anticipacion
+      )
+
+
+      const diferencia = fechaHora - ahora
+
+
+      if (
+        diferencia <= 60000 &&
+        diferencia > 0
+      ) {
+
+        new Notification(
+          "🔔 Recordatorio",
+          {
+            body:
+              `${tarea.texto} vence en ${tarea.anticipacion} hora(s)`
+          }
+        )
+
+      }
+
+    })
+
+  }, [tareas])
   useEffect(() => {
+
+    if ("Notification" in window) {
+
+      if (Notification.permission !== "granted") {
+
+        Notification.requestPermission()
+
+      }
+
+    }
+
+  }, [])
+  useEffect(() => {
+
+    const intervalo = setInterval(() => {
+
+      revisarRecordatorios()
+
+    }, 60000)
+
+
+    return () => clearInterval(intervalo)
+
+
+  }, [revisarRecordatorios])
+
+  useEffect(() => {
+
     localStorage.setItem('tareas', JSON.stringify(tareas))
+
   }, [tareas])
 
   function agregarTarea() {
@@ -47,6 +123,7 @@ export default function TaskList() {
   function eliminarTarea(id) {
     setTareas(tareas.filter(t => t.id !== id))
   }
+
   function ordenarTareas(lista) {
     const pesoPrioridad = {
       alta: 1,
