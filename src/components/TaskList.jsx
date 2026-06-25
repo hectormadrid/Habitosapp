@@ -13,8 +13,8 @@ export default function TaskList() {
   const [prioridad, setPrioridad] = useState('media')
   const [fechaLimite, setFechaLimite] = useState('')
   const [filtro, setFiltro] = useState('todas')
-  const [horaRecordatorio, setHoraRecordatorio] = useState('')
-  const [anticipacion, setAnticipacion] = useState(1)
+  const [horaTarea, setHoraTarea] = useState('')
+  const [tieneHora, setTieneHora] = useState(false)
 
   const revisarRecordatorios = useCallback(() => {
 
@@ -103,15 +103,14 @@ export default function TaskList() {
       texto: input,
       prioridad,
       fechaLimite,
-      horaRecordatorio,
-      anticipacion,
+      horaTarea: tieneHora ? horaTarea : null,
       completada: false
     }])
     setInput('')
     setPrioridad('media')
     setFechaLimite('')
-    setHoraRecordatorio('')
-    setAnticipacion(1)
+    setHoraTarea('')
+    setTieneHora(false)
   }
 
   function toggleTarea(id) {
@@ -170,9 +169,44 @@ export default function TaskList() {
     t => t.completada
   )
   function estaVencida(tarea) {
-    if (!tarea.fechaLimite || tarea.completada) return false
 
-    return new Date(`${tarea.fechaLimite}T00:00:00`) < new Date()
+
+    if (
+      !tarea.fechaLimite ||
+      tarea.completada
+    )
+      return false
+
+
+
+    let fechaVencimiento
+
+
+    if (tarea.horaTarea) {
+
+
+      fechaVencimiento =
+        new Date(
+          `${tarea.fechaLimite}T${tarea.horaTarea}`
+        )
+
+
+    } else {
+
+
+      fechaVencimiento =
+        new Date(
+          `${tarea.fechaLimite}T23:59:59`
+        )
+
+
+    }
+
+
+
+    return fechaVencimiento < new Date()
+
+
   }
 
 
@@ -279,27 +313,31 @@ export default function TaskList() {
           value={fechaLimite}
           onChange={e => setFechaLimite(e.target.value)}
         />
-        <input
-          className={styles.input}
-          type="time"
-          value={horaRecordatorio}
-          onChange={e => setHoraRecordatorio(e.target.value)}
-        />
-        <select
-          className={styles.select}
-          value={anticipacion}
-          onChange={e => setAnticipacion(Number(e.target.value))}
-        >
+        <label className={styles.checkHora}>
 
-          <option value="1">
-            ⏰ 1 hora antes
-          </option>
+          <input
+            type="checkbox"
+            checked={tieneHora}
+            onChange={e => setTieneHora(e.target.checked)}
+          />
 
-          <option value="2">
-            ⏰ 2 horas antes
-          </option>
+          Agregar hora
 
-        </select>
+        </label>
+
+
+        {tieneHora && (
+
+          <input
+            className={styles.input}
+            type="time"
+            value={horaTarea}
+            onChange={
+              e => setHoraTarea(e.target.value)
+            }
+          />
+
+        )}
         <select
           className={styles.select}
           value={prioridad}
@@ -331,7 +369,13 @@ export default function TaskList() {
                 )}
               </span>
             )}
+             {tarea.horaTarea && (
 
+                  <span className={styles.fecha}>
+                    ⏰ {tarea.horaTarea}
+                  </span>
+
+                )}
             {estaVencida(tarea) && (
               <span className={styles.vencida}>
                 ⚠️ Vencida
@@ -366,6 +410,13 @@ export default function TaskList() {
                       { locale: es }
                     )}
                   </span>
+                )}
+                {tarea.horaTarea && (
+
+                  <span className={styles.fecha}>
+                    ⏰ {tarea.horaTarea}
+                  </span>
+
                 )}
 
                 <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
