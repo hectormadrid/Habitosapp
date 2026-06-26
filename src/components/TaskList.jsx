@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef} from 'react'
 import styles from './TaskList.module.css'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -15,6 +15,7 @@ export default function TaskList() {
   const [filtro, setFiltro] = useState('todas')
   const [horaTarea, setHoraTarea] = useState('')
   const [tieneHora, setTieneHora] = useState(false)
+  const notificacionesEnviadas = useRef(new Set())
 
   // ── Persistencia ─────────────────────────────────────────
   useEffect(() => {
@@ -29,75 +30,46 @@ export default function TaskList() {
   }, [])
 
   // ── Revisar recordatorios ─────────────────────────────────
-  const revisarRecordatorios = useCallback(() => {
+ const revisarRecordatorios = useCallback(() => {
 
-    const ahora = new Date()
-
-    setTareas(prev =>
-      prev.map(tarea => {
-        if (
-          tarea.notificado === true ||
-          tarea.completada ||
-          !tarea.fechaLimite ||
-          !tarea.horaTarea
-        ) {
-          return tarea
-        }
-
-        const fechaHora = new Date(
-          `${tarea.fechaLimite}T${tarea.horaTarea}:00`
-        )
-
-        const diferencia = fechaHora - ahora
-
-        console.log(
-          "Revisando:",
-          tarea.texto,
-          "faltan:",
-          Math.round(diferencia / 60000),
-          "min"
-        )
-
-        if (
-          diferencia <= 3600000 &&
-          diferencia > 0 &&
-          !tarea.notificado
-        ) {
-          if (Notification.permission === 'granted') {
-
-            console.log("LANZANDO NOTIFICACION")
-
-            const minutos =
-              Math.round(diferencia / 60000)
-
-            new Notification(
-              '🔔 Recordatorio de tarea',
-              {
-                body:
-                  `"${tarea.texto}" comienza en ${minutos} minutos`
-              }
-            )
-
-          } else {
-
-            console.log(
-              "Sin permiso:",
-              Notification.permission
-            )
-
-          }
-
-          return {
-            ...tarea,
-            notificado: true,
-            fechaNotificacion: new Date().toISOString()
-          }
-
-        }
-        return tarea
-      })
+  const ahora = new Date()
+  tareas.forEach(tarea => {
+    if(
+      tarea.completada ||
+      !tarea.fechaLimite ||
+      !tarea.horaTarea
+    ){
+      return
+    }
+    const fechaHora = new Date(
+      `${tarea.fechaLimite}T${tarea.horaTarea}:00`
     )
-  }, [])
+    const diferencia = fechaHora - ahora
+    const dentroDelRango =
+      diferencia <= 3600000 &&
+      diferencia > 0
+
+    if(
+      dentroDelRango &&
+      !notificacionesEnviadas.current.has(tarea.id)
+    ){
+      if(Notification.permission === "granted"){
+        const minutos =
+        Math.round(diferencia / 60000)
+
+        new Notification(
+          "🔔 Recordatorio de tarea",
+          {
+            body:
+            `"${tarea.texto}" comienza en ${minutos} minutos`
+          }
+        )
+      }
+      // Guardamos que ya avisamos
+      notificacionesEnviadas.current.add(tarea.id)
+    }
+  })
+}, [tareas])
 
 
   // Revisar al montar y cada 30 segundos
