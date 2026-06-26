@@ -16,8 +16,107 @@ export default function TaskList() {
   const [horaTarea, setHoraTarea] = useState('')
   const [tieneHora, setTieneHora] = useState(false)
 
-  
+  // ── Persistencia ─────────────────────────────────────────
+  useEffect(() => {
+    localStorage.setItem('tareas', JSON.stringify(tareas))
+  }, [tareas])
 
+  // ── Pedir permiso de notificaciones al montar ─────────────
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission()
+    }
+  }, [])
+
+  // ── Revisar recordatorios ─────────────────────────────────
+  const revisarRecordatorios = useCallback(() => {
+
+    const ahora = new Date()
+
+    setTareas(prev =>
+      prev.map(tarea => {
+        if (
+          tarea.notificado === true ||
+          tarea.completada ||
+          !tarea.fechaLimite ||
+          !tarea.horaTarea
+        ) {
+          return tarea
+        }
+
+        const fechaHora = new Date(
+          `${tarea.fechaLimite}T${tarea.horaTarea}:00`
+        )
+
+        const diferencia = fechaHora - ahora
+
+        console.log(
+          "Revisando:",
+          tarea.texto,
+          "faltan:",
+          Math.round(diferencia / 60000),
+          "min"
+        )
+
+        if (
+          diferencia <= 3600000 &&
+          diferencia > 0 &&
+          !tarea.notificado
+        ) {
+          if (Notification.permission === 'granted') {
+
+            console.log("LANZANDO NOTIFICACION")
+
+            const minutos =
+              Math.round(diferencia / 60000)
+
+            new Notification(
+              '🔔 Recordatorio de tarea',
+              {
+                body:
+                  `"${tarea.texto}" comienza en ${minutos} minutos`
+              }
+            )
+
+          } else {
+
+            console.log(
+              "Sin permiso:",
+              Notification.permission
+            )
+
+          }
+
+          return {
+            ...tarea,
+            notificado: true,
+            fechaNotificacion: new Date().toISOString()
+          }
+
+        }
+        return tarea
+      })
+    )
+  }, [])
+
+
+  // Revisar al montar y cada 30 segundos
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      revisarRecordatorios()
+    }, 1000)
+
+    const intervalo = setInterval(() => {
+      revisarRecordatorios()
+    }, 30000)
+
+    return () => {
+      clearTimeout(timeout)
+      clearInterval(intervalo)
+    }
+  }, [revisarRecordatorios])
+
+  // ── Acciones ──────────────────────────────────────────────
   function agregarTarea() {
     if (!input.trim()) return
     setTareas([...tareas, {
@@ -26,7 +125,8 @@ export default function TaskList() {
       prioridad,
       fechaLimite,
       horaTarea: tieneHora ? horaTarea : null,
-      completada: false
+      completada: false,
+      notificado: false,   // ← campo nuevo para evitar repetir la notificación
     }])
     setInput('')
     setPrioridad('media')
@@ -34,77 +134,6 @@ export default function TaskList() {
     setHoraTarea('')
     setTieneHora(false)
   }
-  const revisarRecordatorios = useCallback(()=>{
-  const ahora = new Date()
-  tareas.forEach(tarea=>{
-
-    if(
-      tarea.completada ||
-      !tarea.fechaLimite ||
-      !tarea.horaTarea
-    ){
-      return
-    }
-
-    const inicioTarea = new Date(
-      `${tarea.fechaLimite}T${tarea.horaTarea}`
-    )
-
-    const diferencia =
-      inicioTarea - ahora
-    if(
-      diferencia <= 3600000 &&
-      diferencia > 3540000
-    ){
-      new Notification(
-        "🔔 Recordatorio",
-        {
-          body:
-          `Tu tarea "${tarea.texto}" empieza en 1 hora`
-        }
-      )
-    }
-  })
-
-},[tareas])
-
-  useEffect(() => {
-
-    if ("Notification" in window) {
-
-      if (Notification.permission !== "granted") {
-
-        Notification.requestPermission()
-
-      }
-
-    }
-
-  }, [])
-  useEffect(()=>{
-
-
-  revisarRecordatorios()
-
-
-  const intervalo = setInterval(()=>{
-
-    revisarRecordatorios()
-
-  },60000)
-
-
-
-  return ()=>clearInterval(intervalo)
-
-
-},[revisarRecordatorios])
-
-  useEffect(() => {
-
-    localStorage.setItem('tareas', JSON.stringify(tareas))
-
-  }, [tareas])
 
   function toggleTarea(id) {
     setTareas(tareas.map(t =>
@@ -116,159 +145,70 @@ export default function TaskList() {
     setTareas(tareas.filter(t => t.id !== id))
   }
 
-  function ordenarTareas(lista) {
-    const pesoPrioridad = {
-      alta: 1,
-      media: 2,
-      baja: 3
-    }
-
-    return [...lista].sort((a, b) => {
-
-      // Primero fechas
-      if (a.fechaLimite && b.fechaLimite) {
-        const diferencia =
-          new Date(a.fechaLimite) -
-          new Date(b.fechaLimite)
-
-        if (diferencia !== 0)
-          return diferencia
-      }
-
-      // Con fecha antes que sin fecha
-      if (a.fechaLimite && !b.fechaLimite)
-        return -1
-
-      if (!a.fechaLimite && b.fechaLimite)
-        return 1
-
-
-      // Luego prioridad
-      return pesoPrioridad[a.prioridad] -
-        pesoPrioridad[b.prioridad]
-
-    })
-  }
-
-  const tareasFiltradas = ordenarTareas(
-    filtrarTareas(tareas)
-  )
-
-  const pendientes = tareasFiltradas.filter(
-    t => !t.completada
-  )
-
-  const completadas = tareasFiltradas.filter(
-    t => t.completada
-  )
   function estaVencida(tarea) {
-    if (
-      !tarea.fechaLimite ||
-      tarea.completada
-    )
-      return false
-
-    let fechaVencimiento
-    if (tarea.horaTarea) {
-      fechaVencimiento =
-        new Date(
-          `${tarea.fechaLimite}T${tarea.horaTarea}`
-        )
-    } else {
-      fechaVencimiento =
-        new Date(
-          `${tarea.fechaLimite}T23:59:59`
-        )
-    }
+    if (!tarea.fechaLimite || tarea.completada) return false
+    const fechaVencimiento = tarea.horaTarea
+      ? new Date(`${tarea.fechaLimite}T${tarea.horaTarea}`)
+      : new Date(`${tarea.fechaLimite}T23:59:59`)
     return fechaVencimiento < new Date()
   }
 
   function filtrarTareas(lista) {
-
     const hoy = new Date()
     hoy.setHours(0, 0, 0, 0)
-
-    if (filtro === 'pendientes') {
-      return lista.filter(t => !t.completada)
-    }
-
-
-    if (filtro === 'completadas') {
-      return lista.filter(t => t.completada)
-    }
-
-
-    if (filtro === 'hoy') {
-      return lista.filter(t => {
-
-        if (!t.fechaLimite) return false
-
-        const fecha = new Date(
-          `${t.fechaLimite}T00:00:00`
-        )
-
-        return fecha.getTime() === hoy.getTime()
-      })
-    }
-
-
-    if (filtro === 'vencidas') {
-      return lista.filter(t => {
-
-        if (!t.fechaLimite || t.completada)
-          return false
-
-        return new Date(
-          `${t.fechaLimite}T00:00:00`
-        ) < hoy
-      })
-    }
-
-
+    if (filtro === 'pendientes') return lista.filter(t => !t.completada)
+    if (filtro === 'completadas') return lista.filter(t => t.completada)
+    if (filtro === 'hoy') return lista.filter(t => {
+      if (!t.fechaLimite) return false
+      return new Date(`${t.fechaLimite}T00:00:00`).getTime() === hoy.getTime()
+    })
+    if (filtro === 'vencidas') return lista.filter(t => {
+      if (!t.fechaLimite || t.completada) return false
+      return new Date(`${t.fechaLimite}T00:00:00`) < hoy
+    })
     return lista
   }
+
+  function ordenarTareas(lista) {
+    const pesoPrioridad = { alta: 1, media: 2, baja: 3 }
+    return [...lista].sort((a, b) => {
+      if (a.fechaLimite && b.fechaLimite) {
+        const diff = new Date(a.fechaLimite) - new Date(b.fechaLimite)
+        if (diff !== 0) return diff
+      }
+      if (a.fechaLimite && !b.fechaLimite) return -1
+      if (!a.fechaLimite && b.fechaLimite) return 1
+      return pesoPrioridad[a.prioridad] - pesoPrioridad[b.prioridad]
+    })
+  }
+
+  const tareasFiltradas = ordenarTareas(filtrarTareas(tareas))
+  const pendientes = tareasFiltradas.filter(t => !t.completada)
+  const completadas = tareasFiltradas.filter(t => t.completada)
+
+  // ── Render ────────────────────────────────────────────────
   return (
     <div className={styles.container}>
       <p className={styles.progress}>
         {pendientes.length} pendientes · {completadas.length} completadas
       </p>
+
       <div className={styles.filtros}>
-
-        <button
-          className={styles.filtroBtn}
-          onClick={() => setFiltro('todas')}
-        >
-          📋 Todas
-        </button>
-
-        <button
-          className={styles.filtroBtn}
-          onClick={() => setFiltro('pendientes')}
-        >
-          ⏳ Pendientes
-        </button>
-
-        <button
-          className={styles.filtroBtn}
-          onClick={() => setFiltro('completadas')}
-        >
-          ✅ Completadas
-        </button>
-
-        <button
-          className={styles.filtroBtn}
-          onClick={() => setFiltro('hoy')}
-        >
-          📅 Hoy
-        </button>
-
-        <button
-          className={styles.filtroBtn}
-          onClick={() => setFiltro('vencidas')}
-        >
-          ⚠️ Vencidas
-        </button>
-
+        {[
+          { valor: 'todas', icono: '📋', label: 'Todas' },
+          { valor: 'pendientes', icono: '⏳', label: 'Pendientes' },
+          { valor: 'completadas', icono: '✅', label: 'Completadas' },
+          { valor: 'hoy', icono: '📅', label: 'Hoy' },
+          { valor: 'vencidas', icono: '⚠️', label: 'Vencidas' },
+        ].map(f => (
+          <button
+            key={f.valor}
+            className={`${styles.filtroBtn} ${filtro === f.valor ? styles.filtroBtnActivo : ''}`}
+            onClick={() => setFiltro(f.valor)}
+          >
+            {f.icono} {f.label}
+          </button>
+        ))}
       </div>
 
       <div className={styles.inputRow}>
@@ -287,29 +227,20 @@ export default function TaskList() {
           onChange={e => setFechaLimite(e.target.value)}
         />
         <label className={styles.checkHora}>
-
           <input
             type="checkbox"
             checked={tieneHora}
             onChange={e => setTieneHora(e.target.checked)}
           />
-
           Agregar hora
-
         </label>
-
-
         {tieneHora && (
-
           <input
             className={styles.input}
             type="time"
             value={horaTarea}
-            onChange={
-              e => setHoraTarea(e.target.value)
-            }
+            onChange={e => setHoraTarea(e.target.value)}
           />
-
         )}
         <select
           className={styles.select}
@@ -335,24 +266,14 @@ export default function TaskList() {
             <span className={styles.texto}>{tarea.texto}</span>
             {tarea.fechaLimite && (
               <span className={styles.fecha}>
-                📅 {format(
-                  new Date(`${tarea.fechaLimite}T00:00:00`),
-                  'dd MMM',
-                  { locale: es }
-                )}
+                📅 {format(new Date(`${tarea.fechaLimite}T00:00:00`), 'dd MMM', { locale: es })}
               </span>
             )}
             {tarea.horaTarea && (
-
-              <span className={styles.fecha}>
-                ⏰ {tarea.horaTarea}
-              </span>
-
+              <span className={styles.fecha}>⏰ {tarea.horaTarea}</span>
             )}
             {estaVencida(tarea) && (
-              <span className={styles.vencida}>
-                ⚠️ Vencida
-              </span>
+              <span className={styles.vencida}>⚠️ Vencida</span>
             )}
             <span className={`${styles.badge} ${styles[tarea.prioridad]}`}>
               {tarea.prioridad}
@@ -377,21 +298,12 @@ export default function TaskList() {
                 <span className={`${styles.texto} ${styles.textoCompletado}`}>{tarea.texto}</span>
                 {tarea.fechaLimite && (
                   <span className={styles.fecha}>
-                    📅 {format(
-                      new Date(`${tarea.fechaLimite}T00:00:00`),
-                      'dd MMM',
-                      { locale: es }
-                    )}
+                    📅 {format(new Date(`${tarea.fechaLimite}T00:00:00`), 'dd MMM', { locale: es })}
                   </span>
                 )}
                 {tarea.horaTarea && (
-
-                  <span className={styles.fecha}>
-                    ⏰ {tarea.horaTarea}
-                  </span>
-
+                  <span className={styles.fecha}>⏰ {tarea.horaTarea}</span>
                 )}
-
                 <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
               </li>
             ))}
