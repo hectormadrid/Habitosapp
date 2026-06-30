@@ -32,9 +32,53 @@ const CONTENIDO_AYUDA = {
         ],
     },
 
-  
+    tareas: {
+        titulo: '✅ Tareas — Cómo funciona',
+        secciones: [
+            {
+                subtitulo: 'Crear una tarea',
+                texto: 'Escribe el texto de la tarea, opcionalmente agrega una fecha límite, hora y prioridad, luego haz clic en "Agregar".',
+            },
+            {
+                subtitulo: 'Prioridades',
+                texto: '🔴 Alta, 🟡 Media, 🟢 Baja. Las tareas se ordenan automáticamente por fecha y luego por prioridad.',
+            },
+            {
+                subtitulo: 'Recordatorios',
+                texto: 'Si agregas una hora a la tarea, recibirás una notificación del navegador 1 hora antes de que venza. Debes aceptar el permiso de notificaciones la primera vez.',
+            },
+            {
+                subtitulo: 'Filtros',
+                texto: 'Usa los botones de filtro para ver Todas, Pendientes, Completadas, las de Hoy o las Vencidas.',
+            },
+            {
+                subtitulo: 'Tareas vencidas',
+                texto: 'Si una tarea pasa su fecha límite sin completarse, aparece marcada con ⚠️ Vencida.',
+            },
+        ],
+    },
 
- 
+    estadisticas: {
+        titulo: '📊 Estadísticas — Cómo funciona',
+        secciones: [
+            {
+                subtitulo: 'Tarjetas resumen',
+                texto: 'Muestran días registrados, días perfectos (100% de hábitos cumplidos), tu racha actual y tu mejor racha histórica.',
+            },
+            {
+                subtitulo: 'Gráfico de barras — últimos 30 días',
+                texto: 'Muestra cuántos hábitos completaste cada día durante el último mes.',
+            },
+            {
+                subtitulo: 'Gráfico de líneas — promedio semanal',
+                texto: 'Muestra el porcentaje promedio de cumplimiento por semana, durante las últimas 8 semanas.',
+            },
+            {
+                subtitulo: 'Cumplimiento por hábito',
+                texto: 'Compara qué porcentaje de veces has cumplido cada hábito desde que lo creaste, para identificar cuáles te cuestan más.',
+            },
+        ],
+    },
 
    
 }
