@@ -80,7 +80,27 @@ const CONTENIDO_AYUDA = {
         ],
     },
 
-   
+    calendario: {
+        titulo: '📅 Calendario — Cómo funciona',
+        secciones: [
+            {
+                subtitulo: 'Navegar entre meses',
+                texto: 'Usa las flechas ← → para moverte entre meses anteriores y futuros.',
+            },
+            {
+                subtitulo: 'Colores de los días',
+                texto: 'Cada día se colorea según tu progreso: verde (100%), verde claro (70-99%), naranja (1-69%) y rojo claro (0%).',
+            },
+            {
+                subtitulo: 'Seleccionar un día',
+                texto: 'Haz clic en cualquier día para ver el panel con el detalle: qué hábitos completaste y el porcentaje de progreso.',
+            },
+            {
+                subtitulo: 'Agregar notas',
+                texto: 'Dentro del panel del día puedes escribir una nota — útil para recordar eventos o pendientes importantes. Los días con nota guardada muestran un punto azul •.',
+            },
+        ],
+    },
 }
 
 export default function AyudaModal({ seccion, onClose }) {
