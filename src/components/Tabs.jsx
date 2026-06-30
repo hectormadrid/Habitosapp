@@ -1,29 +1,52 @@
+import { useState } from 'react'
+import AyudaModal from './AyudaModal'
 import styles from './Tabs.module.css'
-// Componente de pestañas para cambiar entre "Hábitos" y "Tareas"
+
 export default function Tabs({ activa, onChange }) {
-    // Renderiza dos botones para las pestañas, aplicando estilos según la pestaña activa
+    const [mostrarAyuda, setMostrarAyuda] = useState(false)
+
     return (
-        <nav className={styles.nav}>
-            <button
-                className={`${styles.tab} ${activa === 'habitos' ? styles.tabActiva : ''}`}
-                onClick={() => onChange('habitos')}>
-                Hábitos
-            </button>
-            <button
-                className={`${styles.tab} ${activa === 'tareas' ? styles.tabActiva : ''}`}
-                onClick={() => onChange('tareas')}>
-                Tareas
-            </button>
-            <button
-                className={`${styles.tab} ${activa === 'estadisticas' ? styles.tabActiva : ''}`}
-                onClick={() => onChange('estadisticas')}>
-                Estadisticas
-            </button>
-            <button
-                className={`${styles.tab} ${activa === 'calendario' ? styles.tabActiva : ''}`}
-                onClick={() => onChange('calendario')}>
-                Calendario
-            </button>
-        </nav>
+        <>
+            <nav className={styles.nav}>
+                <div className={styles.tabsGroup}>
+                    <button
+                        className={`${styles.tab} ${activa === 'habitos' ? styles.tabActiva : ''}`}
+                        onClick={() => onChange('habitos')}
+                    >
+                        Hábitos
+                    </button>
+                    <button
+                        className={`${styles.tab} ${activa === 'tareas' ? styles.tabActiva : ''}`}
+                        onClick={() => onChange('tareas')}
+                    >
+                        Tareas
+                    </button>
+                    <button
+                        className={`${styles.tab} ${activa === 'estadisticas' ? styles.tabActiva : ''}`}
+                        onClick={() => onChange('estadisticas')}
+                    >
+                        Estadísticas
+                    </button>
+                    <button
+                        className={`${styles.tab} ${activa === 'calendario' ? styles.tabActiva : ''}`}
+                        onClick={() => onChange('calendario')}
+                    >
+                        Calendario
+                    </button>
+                </div>
+
+                <button
+                    className={styles.ayudaBtn}
+                    onClick={() => setMostrarAyuda(true)}
+                    aria-label="Ayuda"
+                >
+                    ?
+                </button>
+            </nav>
+
+            {mostrarAyuda && (
+                <AyudaModal seccion={activa} onClose={() => setMostrarAyuda(false)} />
+            )}
+        </>
     )
 }
