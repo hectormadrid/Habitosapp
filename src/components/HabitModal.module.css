@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: center;
   z-index: 100;
+  padding: 1rem;
 }
 
 .modal {
@@ -14,18 +15,19 @@
   border: 0.5px solid var(--color-border);
   padding: 1.5rem;
   width: 400px;
-  max-width: 90vw;
+  max-width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .title {
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 1.25rem;
+  color: var(--color-text);
 }
 
-.group {
-  margin-bottom: 1rem;
-}
+.group { margin-bottom: 1rem; }
 
 .label {
   display: block;
@@ -45,15 +47,13 @@
   outline: none;
 }
 
-.input:focus {
-  border-color: var(--color-text);
-}
+.input:focus { border-color: var(--color-text); }
 
 .emojiGrid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  gap: 6px;
-  max-height: 250px;
+  gap: 4px;
+  max-height: 200px;
   overflow-y: auto;
 }
 
@@ -61,7 +61,7 @@
   background: transparent;
   border: 0.5px solid transparent;
   border-radius: var(--radius-md);
-  font-size: 18px;
+  font-size: 17px;
   cursor: pointer;
   padding: 4px;
   text-align: center;
@@ -74,34 +74,12 @@
   border-color: var(--color-border-medium);
 }
 
-.colorGrid {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.swatch {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform 0.1s;
-}
-
-.swatch:hover {
-  transform: scale(1.15);
-}
-
-.swatchSelected {
-  border-color: var(--color-text);
-}
-
 .footer {
   display: flex;
   gap: 8px;
   margin-top: 1.25rem;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .btn {
@@ -118,14 +96,8 @@
   transition: background 0.15s;
 }
 
-.btn:hover {
-  background: var(--color-bg);
-}
-
-.btn:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
+.btn:hover { background: var(--color-bg); }
+.btn:disabled { opacity: 0.4; cursor: default; }
 
 .btnPrimary {
   background: var(--color-text);
@@ -133,10 +105,7 @@
   border-color: var(--color-text);
 }
 
-.btnPrimary:hover {
-  opacity: 0.85;
-  background: var(--color-text);
-}
+.btnPrimary:hover { opacity: 0.85; background: var(--color-text); }
 
 .deleteBtn {
   margin-right: auto;
@@ -144,6 +113,11 @@
   border-color: transparent;
 }
 
-.deleteBtn:hover {
-  background: #FCEBEB;
+.deleteBtn:hover { background: #FCEBEB; }
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .modal { padding: 1.25rem; }
+  .emojiGrid { grid-template-columns: repeat(7, 1fr); }
+  .emojiBtn { font-size: 15px; }
 }

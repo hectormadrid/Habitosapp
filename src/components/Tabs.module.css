@@ -11,19 +11,28 @@
 
 .tabsGroup {
   display: flex;
-  gap: 4px;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tabsGroup::-webkit-scrollbar {
+  display: none;
 }
 
 .tab {
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
-  padding: 8px 16px;
+  padding: 8px 14px;
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text-muted);
   margin-bottom: -1px;
   transition: color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tab:hover {
@@ -57,4 +66,15 @@
   background: var(--color-text);
   color: var(--color-surface);
   border-color: var(--color-text);
+}
+
+@media (max-width: 480px) {
+  .nav {
+    padding: 0 0.5rem;
+  }
+
+  .tab {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
 }

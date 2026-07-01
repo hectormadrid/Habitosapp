@@ -90,8 +90,20 @@
   padding: 9px 20px;
   font-size: 14px;
   cursor: pointer;
+  transition: opacity 0.15s;
 }
 
-.entendidoBtn:hover {
-  opacity: 0.85;
+.entendidoBtn:hover { opacity: 0.85; }
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .header,
+  .contenido,
+  .footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .titulo { font-size: 15px; }
+  .texto  { font-size: 13px; }
 }

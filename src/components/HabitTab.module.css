@@ -68,6 +68,41 @@
   text-transform: uppercase;
 }
 
+/* ── Estadísticas de racha ───────────────────────────────── */
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-width: 780px;
+  margin: 0 auto 1.5rem;
+}
+
+.statCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.statIcon { font-size: 22px; }
+
+.statValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
 /* ── Navegación semanal ──────────────────────────────────── */
 
 .weekNav {
@@ -93,6 +128,7 @@
   max-width: 780px;
   margin: 0 auto;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-radius: 12px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -102,6 +138,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
+  min-width: 500px; /* evita que la tabla se aplaste demasiado */
 }
 
 .thHabit {
@@ -113,20 +150,20 @@
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text);
   white-space: nowrap;
-  min-width: 180px;
+  min-width: 130px;
 }
 
 .thDay {
   text-align: center;
-  padding: 10px 8px 4px;
+  padding: 10px 4px 4px;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-muted);
   background: var(--color-table-header);
   border-bottom: none;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  min-width: 48px;
+  min-width: 36px;
 }
 
 .thEmpty {
@@ -136,8 +173,8 @@
 
 .thDayNum {
   text-align: center;
-  padding: 2px 8px 8px;
-  font-size: 13px;
+  padding: 2px 4px 8px;
+  font-size: 12px;
   font-weight: 500;
   background: var(--color-table-header);
   border-bottom: 1px solid var(--color-border);
@@ -156,13 +193,8 @@
   transition: background 0.1s;
 }
 
-.habitRow:last-child {
-  border-bottom: none;
-}
-
-.habitRow:hover {
-  background: var(--color-table-hover);
-}
+.habitRow:last-child { border-bottom: none; }
+.habitRow:hover { background: var(--color-table-hover); }
 
 .tdHabit {
   padding: 10px 14px;
@@ -184,6 +216,9 @@
   font-weight: 500;
   color: var(--color-text);
   flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 }
 
 .streak {
@@ -202,13 +237,11 @@
   border-radius: 4px;
   display: flex;
   align-items: center;
-  opacity: 0;
+  opacity: 10;
   transition: opacity 0.15s, color 0.15s, background-color 0.15s;
 }
 
-.habitRow:hover .editBtn {
-  opacity: 1;
-}
+.habitRow:hover .editBtn { opacity: 1; }
 
 .editBtn:hover {
   color: var(--color-text);
@@ -217,20 +250,20 @@
 
 .tdCheck {
   text-align: center;
-  padding: 8px 4px;
+  padding: 8px 2px;
   vertical-align: middle;
 }
 
 .checkbox {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 4px;
   border: 1.5px solid var(--color-border-medium);
   background: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 12px;
   color: white;
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
@@ -247,13 +280,11 @@
 
 /* ── Pie de tabla ─────────────────────────────────────────── */
 
-.footerRow {
-  border-top: 1px solid var(--color-border);
-}
+.footerRow { border-top: 1px solid var(--color-border); }
 
 .tdFooterLabel {
   padding: 8px 14px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--color-text-muted);
   white-space: nowrap;
@@ -272,7 +303,7 @@
 .tdFooterPct {
   text-align: center;
   padding: 8px 4px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--color-text);
   transition: background 0.3s;
@@ -280,7 +311,7 @@
 
 .tdSleep {
   text-align: center;
-  padding: 6px 4px;
+  padding: 6px 2px;
   background: var(--color-table-header);
 }
 
@@ -290,14 +321,13 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border-medium);
   border-radius: 6px;
-  padding: 3px 8px;
-  font-size: 12px;
+  padding: 3px 6px;
+  font-size: 11px;
   font-family: inherit;
   color: var(--color-text);
   cursor: pointer;
   text-align: center;
-  width: 44px;
-  transition: border-color 0.15s;
+  width: 38px;
 }
 
 .sleepSelect:focus {
@@ -318,47 +348,10 @@
   font-size: 14px;
 }
 
-/* ── Estadísticas de racha ───────────────────────────────── */
-
-.statsRow {
-  display: flex;
-  gap: 12px;
-  max-width: 780px;
-  margin: 0 auto 1.5rem;
-}
-
-.statCard {
-  flex: 1;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.statIcon {
-  font-size: 22px;
-}
-
-.statValue {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.statLabel {
-  font-size: 12px;
-  color: var(--color-text-muted);
-  text-align: center;
-}
-
 /* ── Rachas del mes ──────────────────────────────────────── */
 
 .mesSection {
-  max-width: 750px;
+  max-width: 780px;
   margin: 1.5rem auto 0;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -377,12 +370,12 @@
 .mesGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+  gap: 4px;
 }
 
 .mesDia {
   aspect-ratio: 1;
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -392,22 +385,18 @@
   cursor: default;
 }
 
-.mesDia:hover {
-  transform: scale(1.1);
-}
+.mesDia:hover { transform: scale(1.1); }
 
 .mesDiaNum {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
 }
 
-.mesDiaCheck {
-  font-size: 10px;
-}
+.mesDiaCheck { font-size: 9px; }
 
 .mesLeyenda {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-top: 1rem;
   flex-wrap: wrap;
 }
@@ -416,14 +405,44 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-muted);
 }
 
 .leyendaColor {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 3px;
   display: inline-block;
   flex-shrink: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (min-width: 480px) {
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 640px) {
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .title { font-size: 18px; }
+  .subtitle { font-size: 12px; }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .statValue { font-size: 20px; }
+  .statIcon  { font-size: 18px; }
+
+  .mesSection { padding: 1rem; }
+  .mesDiaNum  { font-size: 10px; }
 }

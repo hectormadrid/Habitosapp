@@ -23,7 +23,6 @@
   --color-badge-low-fg: #085041;
   --color-empty-future: #f0f0ec;
 
-  /* Colores de nivel de porcentaje (Light mode) */
   --color-pct-0: #fee2e2;
   --color-pct-text-0: #991b1b;
   --color-pct-1: #fb923c;
@@ -57,7 +56,6 @@ body.dark {
   --color-badge-low-fg: #86efac;
   --color-empty-future: #2a2a2a;
 
-  /* Colores de nivel de porcentaje (Dark mode) */
   --color-pct-0: #451a1a;
   --color-pct-text-0: #fecaca;
   --color-pct-1: #4a2c11;
@@ -73,8 +71,14 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
   transition: background-color 0.2s, color 0.2s;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 1rem 0.75rem;
+  }
 }
 
 button {
