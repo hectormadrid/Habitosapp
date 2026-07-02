@@ -20,6 +20,11 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ht_notas') || '{}') } catch { return {} }
   })
 
+  // ← tareas ahora viven aquí en vez de dentro de TaskList
+  const [tareas, setTareas] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('tareas') || '[]') } catch { return [] }
+  })
+
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem('ht_dark') === 'true'
   })
@@ -32,7 +37,15 @@ export default function App() {
     localStorage.setItem('ht_completions', JSON.stringify(completions))
   }, [completions])
 
-   useEffect(() => {
+  useEffect(() => {
+    localStorage.setItem('ht_notas', JSON.stringify(notas))
+  }, [notas])
+
+  useEffect(() => {
+    localStorage.setItem('tareas', JSON.stringify(tareas))
+  }, [tareas])
+
+  useEffect(() => {
     if (darkMode) {
       document.body.classList.add('dark')
     } else {
@@ -43,7 +56,7 @@ export default function App() {
 
   return (
     <div>
-       <button
+      <button
         onClick={() => setDarkMode(d => !d)}
         style={{
           position: 'fixed',
@@ -68,6 +81,7 @@ export default function App() {
       >
         {darkMode ? '☀️' : '🌙'}
       </button>
+
       <Tabs activa={tabActiva} onChange={setTabActiva} />
 
       {tabActiva === 'habitos' && (
@@ -78,8 +92,13 @@ export default function App() {
           setCompletions={setCompletions}
         />
       )}
-      {tabActiva === 'tareas' && <TaskList />}
-       {tabActiva === 'estadisticas' && (
+      {tabActiva === 'tareas' && (
+        <TaskList
+          tareas={tareas}
+          setTareas={setTareas}
+        />
+      )}
+      {tabActiva === 'estadisticas' && (
         <Estadisticas habits={habits} completions={completions} />
       )}
       {tabActiva === 'calendario' && (
@@ -88,6 +107,7 @@ export default function App() {
           completions={completions}
           notas={notas}
           setNotas={setNotas}
+          tareas={tareas}
         />
       )}
     </div>

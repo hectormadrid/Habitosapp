@@ -3,9 +3,9 @@ import { dateKey } from '../utils'
 import styles from './Calendario.module.css'
 
 const DIAS_SEMANA = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
-const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
-export default function Calendario({ habits, completions, notas, setNotas }) {
+export default function Calendario({ habits, completions, notas, setNotas, tareas }) {
   const hoy = new Date()
 
   const [mes, setMes] = useState(hoy.getMonth())
@@ -14,7 +14,9 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
   const [notaTexto, setNotaTexto] = useState('')
 
   // ── Helpers ──────────────────────────────────────────────
-
+  function getTareasDia(dk) {
+    return tareas.filter(t => t.fechaLimite && t.fechaLimite === dk)
+  }
   function getDiasDelMes(m, a) {
     const totalDias = new Date(a, m + 1, 0).getDate()
     return Array.from({ length: totalDias }, (_, i) => {
@@ -36,9 +38,9 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
   function getColorDia(dk, esFuturo) {
     if (esFuturo) return null
     const pct = getPorcentaje(dk)
-    if (pct === 0)   return { bg: 'var(--color-pct-0)', fg: 'var(--color-pct-text-0)' }
-    if (pct <= 40)   return { bg: 'var(--color-pct-1)', fg: 'var(--color-pct-text-1)' }
-    if (pct <= 70)   return { bg: 'var(--color-pct-2)', fg: 'var(--color-pct-text-2)' }
+    if (pct === 0) return { bg: 'var(--color-pct-0)', fg: 'var(--color-pct-text-0)' }
+    if (pct <= 40) return { bg: 'var(--color-pct-1)', fg: 'var(--color-pct-text-1)' }
+    if (pct <= 70) return { bg: 'var(--color-pct-2)', fg: 'var(--color-pct-text-2)' }
     return { bg: 'var(--color-pct-3)', fg: 'var(--color-pct-text-3)' }
   }
 
@@ -80,7 +82,7 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
 
   // ── Render ────────────────────────────────────────────────
 
-  const dias   = getDiasDelMes(mes, año)
+  const dias = getDiasDelMes(mes, año)
   const offset = getOffset(mes, año)
   const todayKey = dateKey(hoy)
 
@@ -111,12 +113,12 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
 
             {/* Días */}
             {dias.map(dia => {
-              const dk       = dateKey(dia)
+              const dk = dateKey(dia)
               const esFuturo = dia > hoy && dk !== todayKey
-              const esHoy    = dk === todayKey
-              const colors   = getColorDia(dk, esFuturo)
-              const bg       = colors ? colors.bg : undefined
-              const fg       = colors ? colors.fg : 'var(--color-text)'
+              const esHoy = dk === todayKey
+              const colors = getColorDia(dk, esFuturo)
+              const bg = colors ? colors.bg : undefined
+              const fg = colors ? colors.fg : 'var(--color-text)'
               const tieneNota = !!notas[dk]
               const seleccionado = diaSeleccionado === dk
 
@@ -124,9 +126,9 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
                 <div
                   key={dk}
                   className={`
-                    ${styles.dia}
-                    ${esHoy ? styles.diaHoy : ''}
-                    ${seleccionado ? styles.diaSeleccionado : ''}
+                  ${styles.dia}
+                  ${esHoy ? styles.diaHoy : ''}
+                  ${seleccionado ? styles.diaSeleccionado : ''}
                   `}
                   style={{ background: bg || undefined, color: fg }}
                   onClick={() => seleccionarDia(dk)}
@@ -134,6 +136,9 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
                 >
                   <span className={styles.diaNum} style={{ color: fg }}>{dia.getDate()}</span>
                   {tieneNota && <span className={styles.notaDot}>•</span>}
+                  {getTareasDia(dk).length > 0 && (
+                    <span className={styles.tareaDot}>•</span>
+                  )}
                 </div>
               )
             })}
@@ -152,6 +157,12 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
                 {item.label}
               </div>
             ))}
+            <div className={styles.leyendaItem}>
+              <span className={styles.notaDot}>•</span> Nota
+            </div>
+            <div className={styles.leyendaItem}>
+              <span className={styles.tareaDot}>•</span> Tarea
+            </div>
           </div>
         </div>
 
@@ -191,6 +202,34 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
                 ))}
               </ul>
             </div>
+            {/* Tareas del día */}
+            {getTareasDia(diaSeleccionado).length > 0 && (
+              <div className={styles.panelSeccion}>
+                <p className={styles.panelSeccionLabel}>Tareas</p>
+                <ul className={styles.habitosList}>
+                  {getTareasDia(diaSeleccionado).map(t => (
+                    <li key={t.id} className={styles.habitoItem}>
+                      <span className={`${styles.habitoDot} ${t.completada ? styles.habitoDotDone : ''}`}>
+                        {t.completada ? '✓' : ''}
+                      </span>
+                      <span className={styles.habitoNombre}>
+                        {t.texto}
+                        {t.horaTarea && (
+                          <span style={{ fontSize: 11, color: 'var(--color-text-hint)', marginLeft: 6 }}>
+                            ⏰ {t.horaTarea}
+                          </span>
+                        )}
+                      </span>
+                      {!t.completada && (
+                        <span className={`${styles.tareaBadge} ${styles[t.prioridad]}`}>
+                          {t.prioridad}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Nota del día */}
             <div className={styles.panelSeccion}>
@@ -207,6 +246,7 @@ export default function Calendario({ habits, completions, notas, setNotas }) {
               </button>
             </div>
           </div>
+
         ) : (
           <div className={styles.panelVacio}>
             <span style={{ fontSize: 32 }}>📅</span>

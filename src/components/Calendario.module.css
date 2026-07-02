@@ -305,3 +305,20 @@
   .diaNum { font-size: 10px; }
   .panelProgresoNum { font-size: 26px; }
 }
+.tareaDot {
+  font-size: 14px;
+  color: #f59e0b;
+  line-height: 1;
+}
+
+.tareaBadge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.alta  { background: var(--color-badge-high-bg); color: var(--color-badge-high-fg); }
+.media { background: var(--color-badge-med-bg);  color: var(--color-badge-med-fg); }
+.baja  { background: var(--color-badge-low-bg);  color: var(--color-badge-low-fg); }

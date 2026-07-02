@@ -3,11 +3,8 @@ import styles from './TaskList.module.css'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
-export default function TaskList() {
-  const [tareas, setTareas] = useState(() => {
-    const guardadas = localStorage.getItem('tareas')
-    return guardadas ? JSON.parse(guardadas) : []
-  })
+export default function TaskList({ tareas, setTareas }) {
+  
 
   const [input, setInput] = useState('')
   const [prioridad, setPrioridad] = useState('media')
