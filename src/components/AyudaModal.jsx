@@ -37,15 +37,19 @@ const CONTENIDO_AYUDA = {
         secciones: [
             {
                 subtitulo: 'Crear una tarea',
-                texto: 'Escribe el texto de la tarea, opcionalmente agrega una fecha límite, hora y prioridad, luego haz clic en "Agregar".',
+                texto: 'Escribe el texto de la tarea, opcionalmente agrega una fecha límite y prioridad, luego haz clic en "Agregar".',
             },
             {
                 subtitulo: 'Prioridades',
                 texto: '🔴 Alta, 🟡 Media, 🟢 Baja. Las tareas se ordenan automáticamente por fecha y luego por prioridad.',
             },
             {
-                subtitulo: 'Recordatorios',
-                texto: 'Si agregas una hora a la tarea, recibirás una notificación del navegador 1 hora antes de que venza. Debes aceptar el permiso de notificaciones la primera vez.',
+                subtitulo: 'Agregar hora y recordatorio',
+                texto: 'Activa "Agregar hora" para asignarle una hora a la tarea. Aparecerá un selector de anticipación donde puedes elegir con cuánto tiempo de antelación quieres recibir el aviso: desde 5 minutos hasta 1 día antes.',
+            },
+            {
+                subtitulo: 'Notificaciones',
+                texto: 'El navegador te avisará automáticamente según la anticipación que elegiste. La primera vez debes aceptar el permiso de notificaciones. Cada tarea solo notifica una vez para no repetir el aviso.',
             },
             {
                 subtitulo: 'Filtros',
