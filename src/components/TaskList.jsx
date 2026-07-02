@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef} from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import styles from './TaskList.module.css'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -16,7 +16,7 @@ export default function TaskList() {
   const [horaTarea, setHoraTarea] = useState('')
   const [tieneHora, setTieneHora] = useState(false)
   const notificacionesEnviadas = useRef(new Set())
-
+  const [anticipacion, setAnticipacion] = useState(60) // minutos
   // ── Persistencia ─────────────────────────────────────────
   useEffect(() => {
     localStorage.setItem('tareas', JSON.stringify(tareas))
@@ -30,46 +30,34 @@ export default function TaskList() {
   }, [])
 
   // ── Revisar recordatorios ─────────────────────────────────
- const revisarRecordatorios = useCallback(() => {
+  const revisarRecordatorios = useCallback(() => {
+    const ahora = new Date()
 
-  const ahora = new Date()
-  tareas.forEach(tarea => {
-    if(
-      tarea.completada ||
-      !tarea.fechaLimite ||
-      !tarea.horaTarea
-    ){
-      return
-    }
-    const fechaHora = new Date(
-      `${tarea.fechaLimite}T${tarea.horaTarea}:00`
-    )
-    const diferencia = fechaHora - ahora
-    const dentroDelRango =
-      diferencia <= 3600000 &&
-      diferencia > 0
+    tareas.forEach(tarea => {
+      if (tarea.completada || !tarea.fechaLimite || !tarea.horaTarea) return
 
-    if(
-      dentroDelRango &&
-      !notificacionesEnviadas.current.has(tarea.id)
-    ){
-      if(Notification.permission === "granted"){
-        const minutos =
-        Math.round(diferencia / 60000)
+      const fechaHora = new Date(`${tarea.fechaLimite}T${tarea.horaTarea}:00`)
+      const diferencia = fechaHora - ahora
+      const anticipacionMs = (tarea.anticipacion ?? 60) * 60000
 
-        new Notification(
-          "🔔 Recordatorio de tarea",
-          {
-            body:
-            `"${tarea.texto}" comienza en ${minutos} minutos`
-          }
-        )
+      const dentroDelRango = diferencia <= anticipacionMs && diferencia > 0
+
+      if (dentroDelRango && !notificacionesEnviadas.current.has(tarea.id)) {
+        if (Notification.permission === 'granted') {
+          const minutos = Math.round(diferencia / 60000)
+          const mensaje = minutos === 0
+            ? `"${tarea.texto}" comienza ahora`
+            : `"${tarea.texto}" comienza en ${minutos} minuto${minutos !== 1 ? 's' : ''}`
+
+          new Notification('🔔 Recordatorio de tarea', {
+            body: mensaje,
+            icon: '/vite.svg',
+          })
+        }
+        notificacionesEnviadas.current.add(tarea.id)
       }
-      // Guardamos que ya avisamos
-      notificacionesEnviadas.current.add(tarea.id)
-    }
-  })
-}, [tareas])
+    })
+  }, [tareas])
 
 
   // Revisar al montar y cada 30 segundos
@@ -97,13 +85,15 @@ export default function TaskList() {
       prioridad,
       fechaLimite,
       horaTarea: tieneHora ? horaTarea : null,
+      anticipacion,
       completada: false,
-      notificado: false,   // ← campo nuevo para evitar repetir la notificación
+      notificado: false,
     }])
     setInput('')
     setPrioridad('media')
     setFechaLimite('')
     setHoraTarea('')
+    setAnticipacion(60)
     setTieneHora(false)
   }
 
@@ -207,12 +197,28 @@ export default function TaskList() {
           Agregar hora
         </label>
         {tieneHora && (
-          <input
-            className={styles.input}
-            type="time"
-            value={horaTarea}
-            onChange={e => setHoraTarea(e.target.value)}
-          />
+          <>
+            <input
+              className={styles.input}
+              type="time"
+              value={horaTarea}
+              onChange={e => setHoraTarea(e.target.value)}
+            />
+            <select
+              className={styles.select}
+              value={anticipacion}
+              onChange={e => setAnticipacion(Number(e.target.value))}
+              title="Avisar con cuánta anticipación"
+            >
+              <option value={5}>⏰ 5 min antes</option>
+              <option value={10}>⏰ 10 min antes</option>
+              <option value={15}>⏰ 15 min antes</option>
+              <option value={30}>⏰ 30 min antes</option>
+              <option value={60}>⏰ 1 hora antes</option>
+              <option value={120}>⏰ 2 horas antes</option>
+              <option value={1440}>⏰ 1 día antes</option>
+            </select>
+          </>
         )}
         <select
           className={styles.select}
@@ -225,6 +231,8 @@ export default function TaskList() {
         </select>
         <button className={styles.addBtn} onClick={agregarTarea}>Agregar</button>
       </div>
+
+
 
       <ul className={styles.list}>
         {pendientes.map(tarea => (
@@ -243,6 +251,15 @@ export default function TaskList() {
             )}
             {tarea.horaTarea && (
               <span className={styles.fecha}>⏰ {tarea.horaTarea}</span>
+            )}
+            {tarea.anticipacion && !tarea.completada && (
+              <span className={styles.fecha}>
+                🔔 {tarea.anticipacion < 60
+                  ? `${tarea.anticipacion}m antes`
+                  : tarea.anticipacion === 1440
+                    ? '1 día antes'
+                    : `${tarea.anticipacion / 60}h antes`}
+              </span>
             )}
             {estaVencida(tarea) && (
               <span className={styles.vencida}>⚠️ Vencida</span>
