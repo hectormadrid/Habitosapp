@@ -232,3 +232,104 @@
     width: 100%;
   }
 }
+/* ── Botón editar tarea ── */
+.editTareaBtn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-hint);
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+  opacity: 10;
+}
+
+.item:hover .editTareaBtn {
+  opacity: 1;
+}
+
+.editTareaBtn:hover {
+  color: var(--color-text);
+  background: var(--color-border);
+}
+
+/* ── Modal editar tarea ── */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+}
+
+.modalEditar {
+  background: var(--color-surface);
+  border-radius: 14px;
+  width: 420px;
+  max-width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modalTitulo {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modalCerrar {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: var(--color-text-hint);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.modalCerrar:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.modalBody {
+  padding: 1.25rem 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modalGrupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modalLabel {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+}

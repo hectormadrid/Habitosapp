@@ -4,8 +4,13 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
 export default function TaskList({ tareas, setTareas }) {
-  
-
+  const [editTexto, setEditTexto] = useState('')
+  const [editPrioridad, setEditPrioridad] = useState('media')
+  const [editFecha, setEditFecha] = useState('')
+  const [editHora, setEditHora] = useState('')
+  const [editTieneHora, setEditTieneHora] = useState(false)
+  const [editAnticipacion, setEditAnticipacion] = useState(60)
+  const [editando, setEditando] = useState(null)
   const [input, setInput] = useState('')
   const [prioridad, setPrioridad] = useState('media')
   const [fechaLimite, setFechaLimite] = useState('')
@@ -102,6 +107,35 @@ export default function TaskList({ tareas, setTareas }) {
 
   function eliminarTarea(id) {
     setTareas(tareas.filter(t => t.id !== id))
+  }
+  function abrirEditar(tarea) {
+    setEditando(tarea)
+    setEditTexto(tarea.texto)
+    setEditPrioridad(tarea.prioridad)
+    setEditFecha(tarea.fechaLimite || '')
+    setEditHora(tarea.horaTarea || '')
+    setEditTieneHora(!!tarea.horaTarea)
+    setEditAnticipacion(tarea.anticipacion || 60)
+  }
+
+  function guardarEdicion() {
+    if (!editTexto.trim()) return
+    setTareas(prev => prev.map(t =>
+      t.id === editando.id ? {
+        ...t,
+        texto: editTexto,
+        prioridad: editPrioridad,
+        fechaLimite: editFecha,
+        horaTarea: editTieneHora ? editHora : null,
+        anticipacion: editTieneHora ? editAnticipacion : null,
+        notificado: false, // resetea para que pueda notificar de nuevo
+      } : t
+    ))
+    setEditando(null)
+  }
+
+  function cerrarEditar() {
+    setEditando(null)
   }
 
   function estaVencida(tarea) {
@@ -265,6 +299,13 @@ export default function TaskList({ tareas, setTareas }) {
               {tarea.prioridad}
             </span>
             <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
+            <button
+              className={styles.editTareaBtn}
+              onClick={() => abrirEditar(tarea)}
+              aria-label="Editar tarea"
+            >
+              <i className="ti ti-pencil" aria-hidden="true" />
+            </button>
           </li>
         ))}
       </ul>
@@ -294,6 +335,113 @@ export default function TaskList({ tareas, setTareas }) {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+      {/* Modal de edición */}
+      {editando && (
+        <div className={styles.modalBackdrop} onClick={e => e.target === e.currentTarget && cerrarEditar()}>
+          <div className={styles.modalEditar}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitulo}>Editar tarea</h2>
+              <button className={styles.modalCerrar} onClick={cerrarEditar}>✕</button>
+            </div>
+
+            <div className={styles.modalBody}>
+              <div className={styles.modalGrupo}>
+                <label className={styles.modalLabel}>Tarea</label>
+                <input
+                  className={styles.input}
+                  type="text"
+                  value={editTexto}
+                  onChange={e => setEditTexto(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && guardarEdicion()}
+                  autoFocus
+                />
+              </div>
+
+              <div className={styles.modalGrupo}>
+                <label className={styles.modalLabel}>Fecha límite</label>
+                <input
+                  className={styles.input}
+                  type="date"
+                  value={editFecha}
+                  onChange={e => setEditFecha(e.target.value)}
+                />
+              </div>
+
+              <div className={styles.modalGrupo}>
+                <label className={styles.checkHora}>
+                  <input
+                    type="checkbox"
+                    checked={editTieneHora}
+                    onChange={e => setEditTieneHora(e.target.checked)}
+                  />
+                  Agregar hora
+                </label>
+              </div>
+
+              {editTieneHora && (
+                <>
+                  <div className={styles.modalGrupo}>
+                    <label className={styles.modalLabel}>Hora</label>
+                    <input
+                      className={styles.input}
+                      type="time"
+                      value={editHora}
+                      onChange={e => setEditHora(e.target.value)}
+                    />
+                  </div>
+                  <div className={styles.modalGrupo}>
+                    <label className={styles.modalLabel}>Recordatorio</label>
+                    <select
+                      className={styles.select}
+                      style={{ width: '100%' }}
+                      value={editAnticipacion}
+                      onChange={e => setEditAnticipacion(Number(e.target.value))}
+                    >
+                      <option value={5}>⏰ 5 min antes</option>
+                      <option value={10}>⏰ 10 min antes</option>
+                      <option value={15}>⏰ 15 min antes</option>
+                      <option value={30}>⏰ 30 min antes</option>
+                      <option value={60}>⏰ 1 hora antes</option>
+                      <option value={120}>⏰ 2 horas antes</option>
+                      <option value={1440}>⏰ 1 día antes</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              <div className={styles.modalGrupo}>
+                <label className={styles.modalLabel}>Prioridad</label>
+                <select
+                  className={styles.select}
+                  style={{ width: '100%' }}
+                  value={editPrioridad}
+                  onChange={e => setEditPrioridad(e.target.value)}
+                >
+                  <option value="alta">🔴 Alta</option>
+                  <option value="media">🟡 Media</option>
+                  <option value="baja">🟢 Baja</option>
+                </select>
+              </div>
+            </div>
+
+            <div className={styles.modalFooter}>
+              <button
+                className={`${styles.deleteBtn}`}
+                style={{ marginRight: 'auto' }}
+                onClick={() => { eliminarTarea(editando.id); setEditando(null) }}
+              >
+                🗑️ Eliminar
+              </button>
+              <button className={styles.filtroBtn} onClick={cerrarEditar}>
+                Cancelar
+              </button>
+              <button className={styles.addBtn} onClick={guardarEdicion} disabled={!editTexto.trim()}>
+                Guardar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
