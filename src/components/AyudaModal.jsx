@@ -118,6 +118,10 @@ const CONTENIDO_AYUDA = {
                 subtitulo: 'Agregar notas',
                 texto: 'Dentro del panel del día puedes escribir una nota — útil para recordar eventos o pendientes importantes. Los días con nota guardada muestran un punto azul •.',
             },
+            {
+                subtitulo: 'Tareas en el Calendario',
+                texto: 'Los días que tienen tareas asignadas muestran un punto amarillo 🟡 en el calendario. Al hacer clic en ese día verás las tareas listadas en el panel lateral junto con los hábitos del día.',
+            },
         ],
     },
 }
