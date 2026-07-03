@@ -6,7 +6,7 @@ import styles from './HabitTab.module.css'
 
 const SLEEP_OPTIONS = [4, 5, 6, 7, 8, 9, 10]
 
-export default function HabitTab({ habits, setHabits, completions, setCompletions }) {
+export default function HabitTab({ habits, setHabits, completions, setCompletions, horaRecordatorio, setHoraRecordatorio }) {
     const [weekOffset, setWeekOffset] = useState(0)
     const [showModal, setShowModal] = useState(false)
     const [editHabit, setEditHabit] = useState(null)
@@ -176,6 +176,26 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
                     <i className="ti ti-plus" aria-hidden="true" />Nuevo
                 </button>
             </div>
+            {/* Recordatorio diario */}
+            <div className={styles.recordatorioRow}>
+                <span className={styles.recordatorioLabel}>🔔 Recordatorio diario</span>
+                <input
+                    type="time"
+                    className={styles.recordatorioInput}
+                    value={horaRecordatorio}
+                    onChange={e => setHoraRecordatorio(e.target.value)}
+                    title="Hora del recordatorio diario de hábitos"
+                />
+                {horaRecordatorio && (
+                    <button
+                        className={styles.recordatorioClear}
+                        onClick={() => setHoraRecordatorio('')}
+                        title="Quitar recordatorio"
+                    >
+                        ✕
+                    </button>
+                )}
+            </div>
             {habits.length > 0 && (
                 <div className={styles.statsRow}>
                     <div className={styles.statCard}>
@@ -318,7 +338,7 @@ export default function HabitTab({ habits, setHabits, completions, setCompletion
                     </table>
                 </div>
             )}
-                {habits.length > 0 && (
+            {habits.length > 0 && (
                 <div className={styles.mesSection}>
                     <h3 className={styles.mesTitulo}>
                         Rachas del mes — {new Date().toLocaleDateString('es', { month: 'long', year: 'numeric' })}

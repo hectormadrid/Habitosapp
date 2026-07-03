@@ -446,3 +446,63 @@
   .mesSection { padding: 1rem; }
   .mesDiaNum  { font-size: 10px; }
 }
+/* ── Recordatorio diario ─────────────────────────────────── */
+
+.recordatorioRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 780px;
+  margin: 0 auto 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.recordatorioLabel {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  flex: 1;
+}
+
+.recordatorioInput {
+  padding: 6px 10px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: 8px;
+  font-size: 13px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  outline: none;
+  cursor: pointer;
+}
+
+.recordatorioInput:focus {
+  border-color: #3b4ef8;
+}
+
+.recordatorioClear {
+  background: transparent;
+  border: none;
+  color: var(--color-text-hint);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.recordatorioClear:hover {
+  color: #e24b4a;
+  background: var(--color-badge-high-bg);
+}
+
+@media (max-width: 480px) {
+  .recordatorioRow {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .recordatorioLabel {
+    width: 100%;
+  }
+}

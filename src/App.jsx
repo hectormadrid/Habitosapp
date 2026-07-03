@@ -20,9 +20,13 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ht_notas') || '{}') } catch { return {} }
   })
 
-  // ← tareas ahora viven aquí en vez de dentro de TaskList
+
   const [tareas, setTareas] = useState(() => {
     try { return JSON.parse(localStorage.getItem('tareas') || '[]') } catch { return [] }
+  })
+
+  const [horaRecordatorioHabitos, setHoraRecordatorioHabitos] = useState(() => {
+    return localStorage.getItem('ht_hora_recordatorio') || ''
   })
 
   const [darkMode, setDarkMode] = useState(() => {
@@ -44,6 +48,41 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('tareas', JSON.stringify(tareas))
   }, [tareas])
+
+  useEffect(() => {
+    localStorage.setItem('ht_hora_recordatorio', horaRecordatorioHabitos)
+  }, [horaRecordatorioHabitos])
+
+  useEffect(() => {
+    if (!horaRecordatorioHabitos) return
+
+    function revisarHabitos() {
+      const ahora = new Date()
+      const horaActual = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`
+
+      if (horaActual !== horaRecordatorioHabitos) return
+
+      const hoy = ahora.toISOString().slice(0, 10)
+      const completadosHoy = habits.filter(h =>
+        completions[`${h.id}_${hoy}`]
+      ).length
+
+      if (completadosHoy === habits.length && habits.length > 0) return
+
+      if (Notification.permission === 'granted') {
+        new Notification('💪 Recordatorio de hábitos', {
+          body: completadosHoy === 0
+            ? `¡No olvides tus hábitos de hoy! Tienes ${habits.length} pendientes.`
+            : `Llevas ${completadosHoy} de ${habits.length} hábitos completados hoy. ¡Sigue así!`,
+          icon: '/vite.svg',
+        })
+      }
+    }
+
+    revisarHabitos()
+    const intervalo = setInterval(revisarHabitos, 60000)
+    return () => clearInterval(intervalo)
+  }, [horaRecordatorioHabitos, habits, completions])
 
   useEffect(() => {
     if (darkMode) {
@@ -90,6 +129,8 @@ export default function App() {
           setHabits={setHabits}
           completions={completions}
           setCompletions={setCompletions}
+          horaRecordatorio={horaRecordatorioHabitos}
+          setHoraRecordatorio={setHoraRecordatorioHabitos}
         />
       )}
       {tabActiva === 'tareas' && (
