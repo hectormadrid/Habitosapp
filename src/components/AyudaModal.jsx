@@ -10,6 +10,10 @@ const CONTENIDO_AYUDA = {
                 texto: 'Haz clic en "Nuevo" para agregar un hábito. Elige un nombre y un emoji que lo represente.',
             },
             {
+                subtitulo: 'Recordatorio diario',
+                texto: 'Elige una hora para recibir un aviso diario que te recuerde marcar tus hábitos como completados. Puedes desactivar el recordatorio en cualquier momento.',
+            },
+            {
                 subtitulo: 'Marcar como completado',
                 texto: 'Haz clic en el checkbox del día correspondiente para marcar el hábito como cumplido. Puedes desmarcarlo haciendo clic de nuevo.',
             },
