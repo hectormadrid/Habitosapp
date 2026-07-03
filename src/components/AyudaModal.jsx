@@ -37,31 +37,42 @@ const CONTENIDO_AYUDA = {
         secciones: [
             {
                 subtitulo: 'Crear una tarea',
-                texto: 'Escribe el texto de la tarea, opcionalmente agrega una fecha límite y prioridad, luego haz clic en "Agregar".',
+                texto: 'Escribe el texto de la tarea en el campo principal y pulsa "Agregar" o la tecla Enter. Opcionalmente puedes añadir una fecha límite, prioridad y hora de recordatorio.',
             },
             {
                 subtitulo: 'Prioridades',
-                texto: '🔴 Alta, 🟡 Media, 🟢 Baja. Las tareas se ordenan automáticamente por fecha y luego por prioridad.',
+                texto: '🔴 Alta para tareas urgentes, 🟡 Media para tareas normales y 🟢 Baja para tareas sin urgencia. Las tareas se ordenan automáticamente por fecha límite y luego por prioridad.',
             },
             {
                 subtitulo: 'Agregar hora y recordatorio',
-                texto: 'Activa "Agregar hora" para asignarle una hora a la tarea. Aparecerá un selector de anticipación donde puedes elegir con cuánto tiempo de antelación quieres recibir el aviso: desde 5 minutos hasta 1 día antes.',
+                texto: 'Activa "Agregar hora" para asignarle una hora específica a la tarea. Aparecerá un selector donde puedes elegir con cuánta anticipación quieres recibir el aviso: desde 5 minutos hasta 1 día antes.',
             },
             {
                 subtitulo: 'Notificaciones',
-                texto: 'El navegador te avisará automáticamente según la anticipación que elegiste. La primera vez debes aceptar el permiso de notificaciones. Cada tarea solo notifica una vez para no repetir el aviso.',
+                texto: 'El navegador te avisará automáticamente según la anticipación que elegiste. La primera vez debes aceptar el permiso de notificaciones cuando el navegador lo solicite. Cada tarea solo notifica una vez para no repetir el aviso.',
+            },
+            {
+                subtitulo: 'Editar una tarea',
+                texto: 'Pasa el cursor sobre cualquier tarea y haz clic en el ícono del lápiz ✏️ que aparece a la derecha. Se abrirá un modal donde puedes modificar el texto, fecha, hora, recordatorio y prioridad.',
+            },
+            {
+                subtitulo: 'Marcar como completada',
+                texto: 'Haz clic en el checkbox a la izquierda de cada tarea para marcarla como completada. Las tareas completadas se mueven a la sección inferior y puedes desmarcarlas en cualquier momento.',
             },
             {
                 subtitulo: 'Filtros',
-                texto: 'Usa los botones de filtro para ver Todas, Pendientes, Completadas, las de Hoy o las Vencidas.',
+                texto: 'Usa los botones de filtro para ver: 📋 Todas, ⏳ Pendientes, ✅ Completadas, 📅 las de Hoy o ⚠️ las Vencidas.',
             },
             {
                 subtitulo: 'Tareas vencidas',
-                texto: 'Si una tarea pasa su fecha límite sin completarse, aparece marcada con ⚠️ Vencida.',
+                texto: 'Si una tarea supera su fecha y hora límite sin completarse aparece marcada con ⚠️ Vencida. Puedes verlas todas usando el filtro "Vencidas".',
+            },
+            {
+                subtitulo: 'Tareas en el Calendario',
+                texto: 'Los días que tienen tareas asignadas muestran un punto amarillo 🟡 en el calendario. Al hacer clic en ese día verás las tareas listadas en el panel lateral junto con los hábitos del día.',
             },
         ],
     },
-
     estadisticas: {
         titulo: '📊 Estadísticas — Cómo funciona',
         secciones: [
