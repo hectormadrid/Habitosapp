@@ -10,8 +10,8 @@ export default function App() {
   const [tabActiva, setTabActiva] = useState('habitos')
 
   const {
-    habits,        setHabits,
-    completions,   setCompletions,
+    habits,
+    completions,
     notas,         setNotas,
     tareas,        setTareas,
     darkMode,      setDarkMode,
@@ -50,10 +50,6 @@ export default function App() {
 
       {tabActiva === 'habitos' && (
         <HabitTab
-          habits={habits}
-          setHabits={setHabits}
-          completions={completions}
-          setCompletions={setCompletions}
           horaRecordatorio={horaRecordatorioHabitos}
           setHoraRecordatorio={setHoraRecordatorioHabitos}
         />
