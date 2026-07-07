@@ -1,5 +1,4 @@
 import { useAppState } from './hooks/useAppState'
-import { useTareas } from './hooks/useTareas'
 import Tabs from './components/Tabs'
 import HabitTab from './components/HabitTab'
 import TaskList from './components/TaskList'
@@ -11,15 +10,9 @@ export default function App() {
   const [tabActiva, setTabActiva] = useState('habitos')
 
   const {
-    habits,
-    completions,
-    notas,    setNotas,
     darkMode, setDarkMode,
     horaRecordatorioHabitos, setHoraRecordatorioHabitos,
   } = useAppState()
-
-  // tareas solo para pasarlas al Calendario
-  const { tareas } = useTareas()
 
   return (
     <div>
@@ -33,24 +26,13 @@ export default function App() {
           setHoraRecordatorio={setHoraRecordatorioHabitos}
         />
       )}
-      {tabActiva === 'tareas' && <TaskList />}
-      {tabActiva === 'estadisticas' && (
-        <Estadisticas habits={habits} completions={completions} />
-      )}
-      {tabActiva === 'calendario' && (
-        <Calendario
-          habits={habits}
-          completions={completions}
-          notas={notas}
-          setNotas={setNotas}
-          tareas={tareas}
-        />
-      )}
+      {tabActiva === 'tareas'        && <TaskList />}
+      {tabActiva === 'estadisticas'  && <Estadisticas />}
+      {tabActiva === 'calendario'    && <Calendario />}
     </div>
   )
 }
 
-//  Componente interno 
 function BotonModoOscuro({ darkMode, onToggle }) {
   return (
     <button
