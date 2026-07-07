@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocalStorage } from "./useLocalStorage";
+import { useLocalStorage } from "./uselocalStorage";
 
 /**
  * Hook que centraliza todo el estado global de la aplicación.
