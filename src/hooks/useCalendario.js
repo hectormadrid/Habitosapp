@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useHabitos } from './useHabitos'
-import { useLocalStorage } from './uselocalStorage'
+import { useLocalStorage } from './useLocalStorage'
 import { useTareas } from './useTareas'
 import { dateKey } from '../utils'
 

@@ -1,4 +1,4 @@
-import { useLocalStorage } from "./uselocalStorage";
+import { useLocalStorage } from "./useLocalStorage";
 import {
   todayStr,
   dateKey,
