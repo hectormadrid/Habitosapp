@@ -100,10 +100,10 @@ export default function TaskList() {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
-        <p className={styles.searchInfo}>
-          {tareasFiltradas.length} resultado
-          {tareasFiltradas.length !== 1 ? "s" : ""}
-        </p>
+
+        <span className={styles.searchInfo}>
+          {tareasFiltradas.length} resultado{tareasFiltradas.length !== 1 ? "s" : ""}
+        </span>
       </div>
       {/* Filtros */}
       <div className={styles.filtros}>
@@ -218,10 +218,10 @@ export default function TaskList() {
           </li>
         ))}
         {tareasFiltradas.length === 0 && (
-    <div className={styles.emptySearch}>
-        🔍 No se encontraron tareas
-    </div>
-)}
+          <div className={styles.emptySearch}>
+            🔍 No se encontraron tareas
+          </div>
+        )}
       </ul>
 
       {/* Lista completadas */}
