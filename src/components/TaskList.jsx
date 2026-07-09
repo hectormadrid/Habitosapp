@@ -7,17 +7,22 @@ import styles from './TaskList.module.css'
 export default function TaskList() {
   const {
     tareas,
+
+    busqueda,
+    setBusqueda,
+
     agregarTarea,
     editarTarea,
     toggleTarea,
     eliminarTarea,
-    busqueda,
-    setBusqueda,
+
     filtrarTareas,
+    buscarTareas,
     ordenarTareas,
+
     estaVencida,
     formatAnticipacion,
-  } = useTareas()
+  } = useTareas();
 
   //  Estado local de UI 
   const [input, setInput] = useState('')
@@ -72,7 +77,11 @@ export default function TaskList() {
 
   //  Datos calculados 
 
-  const tareasFiltradas = ordenarTareas(filtrarTareas(tareas, filtro))
+  const tareasFiltradas = ordenarTareas(
+    buscarTareas(
+      filtrarTareas(tareas, filtro)
+    )
+  );
   const pendientes = tareasFiltradas.filter(t => !t.completada)
   const completadas = tareasFiltradas.filter(t => t.completada)
 
@@ -91,6 +100,10 @@ export default function TaskList() {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
+        <p className={styles.searchInfo}>
+          {tareasFiltradas.length} resultado
+          {tareasFiltradas.length !== 1 ? "s" : ""}
+        </p>
       </div>
       {/* Filtros */}
       <div className={styles.filtros}>
@@ -204,6 +217,11 @@ export default function TaskList() {
             <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
           </li>
         ))}
+        {tareasFiltradas.length === 0 && (
+    <div className={styles.emptySearch}>
+        🔍 No se encontraron tareas
+    </div>
+)}
       </ul>
 
       {/* Lista completadas */}

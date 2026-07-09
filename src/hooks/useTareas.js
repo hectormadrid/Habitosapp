@@ -184,6 +184,7 @@ export function useTareas() {
   tareas,
   busqueda,
   setBusqueda,
+  buscarTareas,
 
   // CRUD
   agregarTarea,
