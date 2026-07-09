@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { formatAnticipacion } from "../utils";
 
@@ -9,6 +9,7 @@ import { formatAnticipacion } from "../utils";
  */
 export function useTareas() {
   const [tareas, setTareas] = useLocalStorage("tareas", []);
+  const [busqueda, setBusqueda] = useState("");
   const notificacionesEnviadas = useRef(new Set());
 
   // ── Pedir permiso de notificaciones al montar ─────────────
@@ -59,7 +60,7 @@ export function useTareas() {
 
   // ── CRUD ──────────────────────────────────────────────────
 
-  function agregarTarea({
+    function agregarTarea({
     texto,
     prioridad,
     fechaLimite,
@@ -68,19 +69,27 @@ export function useTareas() {
     tieneHora,
   }) {
     if (!texto.trim()) return;
-    setTareas((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        texto,
-        prioridad,
-        fechaLimite,
-        horaTarea: tieneHora ? horaTarea : null,
-        anticipacion: tieneHora ? anticipacion : null,
-        completada: false,
-        notificado: false,
-      },
-    ]);
+
+    const nuevaTarea = {
+      id: Date.now(),
+      texto,
+      prioridad,
+      fechaLimite,
+      horaTarea: tieneHora ? horaTarea : null,
+      anticipacion: tieneHora ? anticipacion : null,
+
+      completada: false,
+      notificado: false,
+
+      // Preparado para futuras mejoras
+      descripcion: "",
+      categoria: "",
+      favorita: false,
+      fijada: false,
+      subtareas: [],
+    };
+
+    setTareas((prev) => [...prev, nuevaTarea]);
   }
 
   function editarTarea(id, cambios) {
@@ -109,21 +118,44 @@ export function useTareas() {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    if (filtro === "pendientes") return lista.filter((t) => !t.completada);
-    if (filtro === "completadas") return lista.filter((t) => t.completada);
-    if (filtro === "hoy")
-      return lista.filter((t) => {
-        if (!t.fechaLimite) return false;
-        return (
-          new Date(`${t.fechaLimite}T00:00:00`).getTime() === hoy.getTime()
-        );
-      });
-    if (filtro === "vencidas")
-      return lista.filter((t) => {
-        if (!t.fechaLimite || t.completada) return false;
-        return new Date(`${t.fechaLimite}T00:00:00`) < hoy;
-      });
-    return lista;
+    switch (filtro) {
+      case "pendientes":
+        return lista.filter((t) => !t.completada);
+
+      case "completadas":
+        return lista.filter((t) => t.completada);
+
+      case "hoy":
+        return lista.filter((t) => {
+          if (!t.fechaLimite) return false;
+
+          return (
+            new Date(`${t.fechaLimite}T00:00:00`).getTime() ===
+            hoy.getTime()
+          );
+        });
+
+      case "vencidas":
+        return lista.filter((t) => {
+          if (!t.fechaLimite || t.completada) return false;
+
+          return new Date(`${t.fechaLimite}T00:00:00`) < hoy;
+        });
+
+      default:
+        return lista;
+    }
+  }
+  function buscarTareas(lista) {
+    if (!busqueda.trim()) return lista;
+
+    const texto = busqueda.toLowerCase().trim();
+
+    return lista.filter((tarea) => {
+      return [tarea.texto, tarea.descripcion, tarea.categoria, tarea.prioridad]
+        .filter(Boolean)
+        .some((valor) => valor.toLowerCase().includes(texto));
+    });
   }
 
   function ordenarTareas(lista) {
@@ -148,14 +180,21 @@ export function useTareas() {
   }
 
   return {
-    tareas,
-    agregarTarea,
-    editarTarea,
-    toggleTarea,
-    eliminarTarea,
-    filtrarTareas,
-    ordenarTareas,
-    estaVencida,
-    formatAnticipacion,
-  };
+  // Estado
+  tareas,
+  busqueda,
+  setBusqueda,
+
+  // CRUD
+  agregarTarea,
+  editarTarea,
+  toggleTarea,
+  eliminarTarea,
+
+  // Utilidades
+  filtrarTareas,
+  ordenarTareas,
+  estaVencida,
+  formatAnticipacion,
+};
 }

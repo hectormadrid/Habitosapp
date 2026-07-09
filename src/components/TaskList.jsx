@@ -11,6 +11,8 @@ export default function TaskList() {
     editarTarea,
     toggleTarea,
     eliminarTarea,
+    busqueda,
+    setBusqueda,
     filtrarTareas,
     ordenarTareas,
     estaVencida,
@@ -18,20 +20,20 @@ export default function TaskList() {
   } = useTareas()
 
   //  Estado local de UI 
-  const [input, setInput]               = useState('')
-  const [prioridad, setPrioridad]       = useState('media')
-  const [fechaLimite, setFechaLimite]   = useState('')
-  const [horaTarea, setHoraTarea]       = useState('')
-  const [tieneHora, setTieneHora]       = useState(false)
+  const [input, setInput] = useState('')
+  const [prioridad, setPrioridad] = useState('media')
+  const [fechaLimite, setFechaLimite] = useState('')
+  const [horaTarea, setHoraTarea] = useState('')
+  const [tieneHora, setTieneHora] = useState(false)
   const [anticipacion, setAnticipacion] = useState(60)
-  const [filtro, setFiltro]             = useState('todas')
+  const [filtro, setFiltro] = useState('todas')
 
-  const [editando, setEditando]               = useState(null)
-  const [editTexto, setEditTexto]             = useState('')
-  const [editPrioridad, setEditPrioridad]     = useState('media')
-  const [editFecha, setEditFecha]             = useState('')
-  const [editHora, setEditHora]               = useState('')
-  const [editTieneHora, setEditTieneHora]     = useState(false)
+  const [editando, setEditando] = useState(null)
+  const [editTexto, setEditTexto] = useState('')
+  const [editPrioridad, setEditPrioridad] = useState('media')
+  const [editFecha, setEditFecha] = useState('')
+  const [editHora, setEditHora] = useState('')
+  const [editTieneHora, setEditTieneHora] = useState(false)
   const [editAnticipacion, setEditAnticipacion] = useState(60)
 
   //  Handlers 
@@ -71,8 +73,8 @@ export default function TaskList() {
   //  Datos calculados 
 
   const tareasFiltradas = ordenarTareas(filtrarTareas(tareas, filtro))
-  const pendientes      = tareasFiltradas.filter(t => !t.completada)
-  const completadas     = tareasFiltradas.filter(t => t.completada)
+  const pendientes = tareasFiltradas.filter(t => !t.completada)
+  const completadas = tareasFiltradas.filter(t => t.completada)
 
   // Render 
 
@@ -81,15 +83,23 @@ export default function TaskList() {
       <p className={styles.progress}>
         {pendientes.length} pendientes · {completadas.length} completadas
       </p>
-
+      <div className={styles.searchContainer}>
+        <input
+          className={styles.searchInput}
+          type="text"
+          placeholder="🔍 Buscar tareas..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </div>
       {/* Filtros */}
       <div className={styles.filtros}>
         {[
-          { valor: 'todas',       icono: '📋', label: 'Todas' },
-          { valor: 'pendientes',  icono: '⏳', label: 'Pendientes' },
+          { valor: 'todas', icono: '📋', label: 'Todas' },
+          { valor: 'pendientes', icono: '⏳', label: 'Pendientes' },
           { valor: 'completadas', icono: '✅', label: 'Completadas' },
-          { valor: 'hoy',         icono: '📅', label: 'Hoy' },
-          { valor: 'vencidas',    icono: '⚠️', label: 'Vencidas' },
+          { valor: 'hoy', icono: '📅', label: 'Hoy' },
+          { valor: 'vencidas', icono: '⚠️', label: 'Vencidas' },
         ].map(f => (
           <button
             key={f.valor}
