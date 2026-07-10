@@ -111,6 +111,40 @@ export function useTareas() {
     setTareas((prev) => prev.filter((t) => t.id !== id));
     notificacionesEnviadas.current.delete(id);
   }
+  //  Subtareas
+
+function agregarSubtarea(tareaId, texto) {
+  if (!texto.trim()) return
+  setTareas(prev => prev.map(t =>
+    t.id === tareaId ? {
+      ...t,
+      subtareas: [
+        ...( t.subtareas || []),
+        { id: Date.now(), texto, completada: false }
+      ]
+    } : t
+  ))
+}
+
+function toggleSubtarea(tareaId, subtareaId) {
+  setTareas(prev => prev.map(t =>
+    t.id === tareaId ? {
+      ...t,
+      subtareas: (t.subtareas || []).map(s =>
+        s.id === subtareaId ? { ...s, completada: !s.completada } : s
+      )
+    } : t
+  ))
+}
+
+function eliminarSubtarea(tareaId, subtareaId) {
+  setTareas(prev => prev.map(t =>
+    t.id === tareaId ? {
+      ...t,
+      subtareas: (t.subtareas || []).filter(s => s.id !== subtareaId)
+    } : t
+  ))
+}
 
   // ── Filtrado y ordenamiento ───────────────────────────────
 
@@ -197,5 +231,8 @@ export function useTareas() {
   ordenarTareas,
   estaVencida,
   formatAnticipacion,
+  agregarSubtarea,
+  toggleSubtarea,
+  eliminarSubtarea,
 };
 }

@@ -22,6 +22,9 @@ export default function TaskList() {
 
     estaVencida,
     formatAnticipacion,
+    agregarSubtarea,
+    toggleSubtarea,
+    eliminarSubtarea,
   } = useTareas();
 
   //  Estado local de UI 
@@ -40,8 +43,22 @@ export default function TaskList() {
   const [editHora, setEditHora] = useState('')
   const [editTieneHora, setEditTieneHora] = useState(false)
   const [editAnticipacion, setEditAnticipacion] = useState(60)
+  const [subtareaInputs, setSubtareaInputs] = useState({})
+  const [tareasExpandidas, setTareasExpandidas] = useState({})
 
   //  Handlers 
+
+  function toggleExpansion(id) {
+    setTareasExpandidas(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+
+  function handleAgregarSubtarea(tareaId) {
+    const texto = subtareaInputs[tareaId] || ''
+    if (!texto.trim()) return
+    agregarSubtarea(tareaId, texto)
+    setSubtareaInputs(prev => ({ ...prev, [tareaId]: '' }))
+  }
+
 
   function handleAgregar() {
     agregarTarea({ texto: input, prioridad, fechaLimite, horaTarea, anticipacion, tieneHora })
@@ -187,34 +204,98 @@ export default function TaskList() {
       <ul className={styles.list}>
         {pendientes.map(tarea => (
           <li key={tarea.id} className={styles.item}>
-            <input
-              className={styles.checkbox}
-              type="checkbox"
-              checked={tarea.completada}
-              onChange={() => toggleTarea(tarea.id)}
-            />
-            <span className={styles.texto}>{tarea.texto}</span>
-            {tarea.fechaLimite && (
-              <span className={styles.fecha}>
-                📅 {format(new Date(`${tarea.fechaLimite}T00:00:00`), 'dd MMM', { locale: es })}
+            <div className={styles.itemMain}>
+              <input
+                className={styles.checkbox}
+                type="checkbox"
+                checked={tarea.completada}
+                onChange={() => toggleTarea(tarea.id)}
+              />
+              <span className={styles.texto}>{tarea.texto}</span>
+              {tarea.fechaLimite && (
+                <span className={styles.fecha}>
+                  📅 {format(new Date(`${tarea.fechaLimite}T00:00:00`), 'dd MMM', { locale: es })}
+                </span>
+              )}
+              {tarea.horaTarea && (
+                <span className={styles.fecha}>⏰ {tarea.horaTarea}</span>
+              )}
+              {tarea.anticipacion && (
+                <span className={styles.fecha}>🔔 {formatAnticipacion(tarea.anticipacion)}</span>
+              )}
+              {estaVencida(tarea) && (
+                <span className={styles.vencida}>⚠️ Vencida</span>
+              )}
+              <span className={`${styles.badge} ${styles[tarea.prioridad]}`}>
+                {tarea.prioridad}
               </span>
+
+              {/* Botón expandir subtareas */}
+              <button
+                className={styles.expandBtn}
+                onClick={() => toggleExpansion(tarea.id)}
+                aria-label="Ver subtareas"
+                title={`${(tarea.subtareas || []).length} subtareas`}
+              >
+                <i className={`ti ti-chevron-${tareasExpandidas[tarea.id] ? 'up' : 'down'}`} />
+                {(tarea.subtareas || []).length > 0 && (
+                  <span className={styles.subtareaCount}>
+                    {(tarea.subtareas || []).filter(s => s.completada).length}/{(tarea.subtareas || []).length}
+                  </span>
+                )}
+              </button>
+
+              <button className={styles.editTareaBtn} onClick={() => abrirEditar(tarea)} aria-label="Editar">
+                <i className="ti ti-pencil" aria-hidden="true" />
+              </button>
+              <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
+            </div>
+
+            {/* Subtareas expandibles */}
+            {tareasExpandidas[tarea.id] && (
+              <div className={styles.subtareasPanel}>
+                <ul className={styles.subtareasList}>
+                  {(tarea.subtareas || []).map(sub => (
+                    <li key={sub.id} className={styles.subtareaItem}>
+                      <input
+                        type="checkbox"
+                        className={styles.checkbox}
+                        checked={sub.completada}
+                        onChange={() => toggleSubtarea(tarea.id, sub.id)}
+                      />
+                      <span className={`${styles.subtareaTexto} ${sub.completada ? styles.textoCompletado : ''}`}>
+                        {sub.texto}
+                      </span>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => eliminarSubtarea(tarea.id, sub.id)}
+                        aria-label="Eliminar subtarea"
+                      >
+                        ✕
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Input nueva subtarea */}
+                <div className={styles.subtareaInputRow}>
+                  <input
+                    className={styles.subtareaInput}
+                    type="text"
+                    placeholder="Agregar subtarea..."
+                    value={subtareaInputs[tarea.id] || ''}
+                    onChange={e => setSubtareaInputs(prev => ({ ...prev, [tarea.id]: e.target.value }))}
+                    onKeyDown={e => e.key === 'Enter' && handleAgregarSubtarea(tarea.id)}
+                  />
+                  <button
+                    className={styles.subtareaAddBtn}
+                    onClick={() => handleAgregarSubtarea(tarea.id)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
             )}
-            {tarea.horaTarea && (
-              <span className={styles.fecha}>⏰ {tarea.horaTarea}</span>
-            )}
-            {tarea.anticipacion && (
-              <span className={styles.fecha}>🔔 {formatAnticipacion(tarea.anticipacion)}</span>
-            )}
-            {estaVencida(tarea) && (
-              <span className={styles.vencida}>⚠️ Vencida</span>
-            )}
-            <span className={`${styles.badge} ${styles[tarea.prioridad]}`}>
-              {tarea.prioridad}
-            </span>
-            <button className={styles.editTareaBtn} onClick={() => abrirEditar(tarea)} aria-label="Editar">
-              <i className="ti ti-pencil" aria-hidden="true" />
-            </button>
-            <button className={styles.deleteBtn} onClick={() => eliminarTarea(tarea.id)}>✕</button>
           </li>
         ))}
         {tareasFiltradas.length === 0 && (
