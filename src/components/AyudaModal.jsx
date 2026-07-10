@@ -75,6 +75,14 @@ const CONTENIDO_AYUDA = {
                 subtitulo: 'Tareas en el Calendario',
                 texto: 'Los días que tienen tareas asignadas muestran un punto amarillo 🟡 en el calendario. Al hacer clic en ese día verás las tareas listadas en el panel lateral junto con los hábitos del día.',
             },
+            {
+                subtitulo: 'Buscador inteligente',
+                texto: 'El buscador permite localizar tareas de forma instantánea mientras escribes. Puedes buscar por el nombre de la tarea, prioridad, categoría o cualquier información relacionada. Los resultados se actualizan automáticamente para ayudarte a encontrar lo que necesitas sin recorrer toda la lista.',
+            },
+            {
+                subtitulo: ' Subtareas',
+                texto: 'Las subtareas sirven para dividir una tarea en pequeños pasos. Esto te permite organizar mejor el trabajo, marcar cada paso como completado y visualizar fácilmente el progreso de la tarea principal. Son ideales para proyectos, estudios o actividades que requieren varias acciones antes de finalizar.',
+            },
         ],
     },
     estadisticas: {
