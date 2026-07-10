@@ -476,3 +476,43 @@
 .subtareaAddBtn:hover {
   opacity: 0.85;
 }
+/* ── Categorías ── */
+
+.categoriasRow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.categoriaBtn {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--color-border-medium);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.categoriaBtn:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+.categoriaBtnActivo {
+  background: var(--color-text);
+  color: var(--color-surface);
+  border-color: var(--color-text);
+}
+
+.categoriaTag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}

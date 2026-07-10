@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { formatAnticipacion } from "../utils";
-
+import { CATEGORIAS } from "../constants";
 /**
  * Hook que centraliza toda la lógica de tareas.
  * Maneja el estado, persistencia, ordenamiento,
@@ -10,6 +10,7 @@ import { formatAnticipacion } from "../utils";
 export function useTareas() {
   const [tareas, setTareas] = useLocalStorage("tareas", []);
   const [busqueda, setBusqueda] = useState("");
+  const [categoriaFiltro, setCategoriaFiltro] = useState("");
   const notificacionesEnviadas = useRef(new Set());
 
   // ── Pedir permiso de notificaciones al montar ─────────────
@@ -58,15 +59,16 @@ export function useTareas() {
     };
   }, [revisarRecordatorios]);
 
-  // ── CRUD ──────────────────────────────────────────────────
+  //  CRUD
 
-    function agregarTarea({
+  function agregarTarea({
     texto,
     prioridad,
     fechaLimite,
     horaTarea,
     anticipacion,
     tieneHora,
+    categoria,
   }) {
     if (!texto.trim()) return;
 
@@ -80,13 +82,12 @@ export function useTareas() {
 
       completada: false,
       notificado: false,
-
+      categoria: categoria || "",
+      subtareas: [],
       // Preparado para futuras mejoras
       descripcion: "",
-      categoria: "",
       favorita: false,
       fijada: false,
-      subtareas: [],
     };
 
     setTareas((prev) => [...prev, nuevaTarea]);
@@ -113,40 +114,52 @@ export function useTareas() {
   }
   //  Subtareas
 
-function agregarSubtarea(tareaId, texto) {
-  if (!texto.trim()) return
-  setTareas(prev => prev.map(t =>
-    t.id === tareaId ? {
-      ...t,
-      subtareas: [
-        ...( t.subtareas || []),
-        { id: Date.now(), texto, completada: false }
-      ]
-    } : t
-  ))
-}
+  function agregarSubtarea(tareaId, texto) {
+    if (!texto.trim()) return;
+    setTareas((prev) =>
+      prev.map((t) =>
+        t.id === tareaId
+          ? {
+              ...t,
+              subtareas: [
+                ...(t.subtareas || []),
+                { id: Date.now(), texto, completada: false },
+              ],
+            }
+          : t,
+      ),
+    );
+  }
 
-function toggleSubtarea(tareaId, subtareaId) {
-  setTareas(prev => prev.map(t =>
-    t.id === tareaId ? {
-      ...t,
-      subtareas: (t.subtareas || []).map(s =>
-        s.id === subtareaId ? { ...s, completada: !s.completada } : s
-      )
-    } : t
-  ))
-}
+  function toggleSubtarea(tareaId, subtareaId) {
+    setTareas((prev) =>
+      prev.map((t) =>
+        t.id === tareaId
+          ? {
+              ...t,
+              subtareas: (t.subtareas || []).map((s) =>
+                s.id === subtareaId ? { ...s, completada: !s.completada } : s,
+              ),
+            }
+          : t,
+      ),
+    );
+  }
 
-function eliminarSubtarea(tareaId, subtareaId) {
-  setTareas(prev => prev.map(t =>
-    t.id === tareaId ? {
-      ...t,
-      subtareas: (t.subtareas || []).filter(s => s.id !== subtareaId)
-    } : t
-  ))
-}
+  function eliminarSubtarea(tareaId, subtareaId) {
+    setTareas((prev) =>
+      prev.map((t) =>
+        t.id === tareaId
+          ? {
+              ...t,
+              subtareas: (t.subtareas || []).filter((s) => s.id !== subtareaId),
+            }
+          : t,
+      ),
+    );
+  }
 
-  // ── Filtrado y ordenamiento ───────────────────────────────
+  // Filtrado y ordenamiento
 
   function filtrarTareas(lista, filtro) {
     const hoy = new Date();
@@ -164,8 +177,7 @@ function eliminarSubtarea(tareaId, subtareaId) {
           if (!t.fechaLimite) return false;
 
           return (
-            new Date(`${t.fechaLimite}T00:00:00`).getTime() ===
-            hoy.getTime()
+            new Date(`${t.fechaLimite}T00:00:00`).getTime() === hoy.getTime()
           );
         });
 
@@ -192,6 +204,11 @@ function eliminarSubtarea(tareaId, subtareaId) {
     });
   }
 
+  function filtrarPorCategoria(lista) {
+    if (!categoriaFiltro) return lista;
+    return lista.filter((t) => t.categoria === categoriaFiltro);
+  }
+
   function ordenarTareas(lista) {
     const pesoPrioridad = { alta: 1, media: 2, baja: 3 };
     return [...lista].sort((a, b) => {
@@ -214,25 +231,24 @@ function eliminarSubtarea(tareaId, subtareaId) {
   }
 
   return {
-  // Estado
-  tareas,
-  busqueda,
-  setBusqueda,
-  buscarTareas,
-
-  // CRUD
-  agregarTarea,
-  editarTarea,
-  toggleTarea,
-  eliminarTarea,
-
-  // Utilidades
-  filtrarTareas,
-  ordenarTareas,
-  estaVencida,
-  formatAnticipacion,
-  agregarSubtarea,
-  toggleSubtarea,
-  eliminarSubtarea,
-};
+    tareas,
+    busqueda,
+    setBusqueda,
+    buscarTareas,
+    agregarTarea,
+    editarTarea,
+    toggleTarea,
+    eliminarTarea,
+    filtrarTareas,
+    ordenarTareas,
+    estaVencida,
+    formatAnticipacion,
+    agregarSubtarea,
+    toggleSubtarea,
+    eliminarSubtarea,
+    categoriaFiltro,
+    setCategoriaFiltro,
+    filtrarPorCategoria,
+    CATEGORIAS,
+  };
 }

@@ -25,6 +25,10 @@ export default function TaskList() {
     agregarSubtarea,
     toggleSubtarea,
     eliminarSubtarea,
+    categoriaFiltro,
+    setCategoriaFiltro,
+    filtrarPorCategoria,
+    CATEGORIAS,
   } = useTareas();
 
   //  Estado local de UI 
@@ -35,6 +39,7 @@ export default function TaskList() {
   const [tieneHora, setTieneHora] = useState(false)
   const [anticipacion, setAnticipacion] = useState(60)
   const [filtro, setFiltro] = useState('todas')
+  const [categoria, setCategoria] = useState('')
 
   const [editando, setEditando] = useState(null)
   const [editTexto, setEditTexto] = useState('')
@@ -45,6 +50,7 @@ export default function TaskList() {
   const [editAnticipacion, setEditAnticipacion] = useState(60)
   const [subtareaInputs, setSubtareaInputs] = useState({})
   const [tareasExpandidas, setTareasExpandidas] = useState({})
+  const [editCategoria, setEditCategoria] = useState('')
 
   //  Handlers 
 
@@ -61,13 +67,14 @@ export default function TaskList() {
 
 
   function handleAgregar() {
-    agregarTarea({ texto: input, prioridad, fechaLimite, horaTarea, anticipacion, tieneHora })
+    agregarTarea({ texto: input, prioridad, fechaLimite, horaTarea, anticipacion, tieneHora, categoria })
     setInput('')
     setPrioridad('media')
     setFechaLimite('')
     setHoraTarea('')
     setAnticipacion(60)
     setTieneHora(false)
+    setCategoria('')
   }
 
   function abrirEditar(tarea) {
@@ -78,6 +85,7 @@ export default function TaskList() {
     setEditHora(tarea.horaTarea || '')
     setEditTieneHora(!!tarea.horaTarea)
     setEditAnticipacion(tarea.anticipacion || 60)
+    setEditCategoria(tarea.categoria || '')  // ← nuevo
   }
 
   function guardarEdicion() {
@@ -88,6 +96,7 @@ export default function TaskList() {
       fechaLimite: editFecha,
       horaTarea: editTieneHora ? editHora : null,
       anticipacion: editTieneHora ? editAnticipacion : null,
+      categoria: editCategoria || "",  
     })
     setEditando(null)
   }
@@ -96,9 +105,11 @@ export default function TaskList() {
 
   const tareasFiltradas = ordenarTareas(
     buscarTareas(
-      filtrarTareas(tareas, filtro)
+      filtrarPorCategoria(
+        filtrarTareas(tareas, filtro)
+      )
     )
-  );
+  )
   const pendientes = tareasFiltradas.filter(t => !t.completada)
   const completadas = tareasFiltradas.filter(t => t.completada)
 
@@ -121,6 +132,25 @@ export default function TaskList() {
         <span className={styles.searchInfo}>
           {tareasFiltradas.length} resultado{tareasFiltradas.length !== 1 ? "s" : ""}
         </span>
+      </div>
+      {/* Filtro por categoría */}
+      <div className={styles.categoriasRow}>
+        <button
+          className={`${styles.categoriaBtn} ${categoriaFiltro === '' ? styles.categoriaBtnActivo : ''}`}
+          onClick={() => setCategoriaFiltro('')}
+        >
+          Todas
+        </button>
+        {CATEGORIAS.map(cat => (
+          <button
+            key={cat.id}
+            className={`${styles.categoriaBtn} ${categoriaFiltro === cat.id ? styles.categoriaBtnActivo : ''}`}
+            style={categoriaFiltro === cat.id ? { background: cat.color, color: 'white', borderColor: cat.color } : { borderColor: cat.color, color: cat.color }}
+            onClick={() => setCategoriaFiltro(prev => prev === cat.id ? '' : cat.id)}
+          >
+            {cat.label}
+          </button>
+        ))}
       </div>
       {/* Filtros */}
       <div className={styles.filtros}>
@@ -197,6 +227,16 @@ export default function TaskList() {
           <option value="media">🟡 Media</option>
           <option value="baja">🟢 Baja</option>
         </select>
+        <select
+          className={styles.select}
+          value={categoria}
+          onChange={e => setCategoria(e.target.value)}
+        >
+          <option value="">📂 Sin categoría</option>
+          {CATEGORIAS.map(cat => (
+            <option key={cat.id} value={cat.id}>{cat.label}</option>
+          ))}
+        </select>
         <button className={styles.addBtn} onClick={handleAgregar}>Agregar</button>
       </div>
 
@@ -226,10 +266,20 @@ export default function TaskList() {
               {estaVencida(tarea) && (
                 <span className={styles.vencida}>⚠️ Vencida</span>
               )}
+              {tarea.categoria && (() => {
+                const cat = CATEGORIAS.find(c => c.id === tarea.categoria)
+                return cat ? (
+                  <span
+                    className={styles.categoriaTag}
+                    style={{ background: cat.bg, color: cat.color }}
+                  >
+                    {cat.label}
+                  </span>
+                ) : null
+              })()}
               <span className={`${styles.badge} ${styles[tarea.prioridad]}`}>
                 {tarea.prioridad}
               </span>
-
               {/* Botón expandir subtareas */}
               <button
                 className={styles.expandBtn}
@@ -403,6 +453,20 @@ export default function TaskList() {
                   </div>
                 </>
               )}
+              <div className={styles.modalGrupo}>
+                <label className={styles.modalLabel}>Categoría</label>
+                <select
+                  className={styles.select}
+                  style={{ width: '100%' }}
+                  value={editCategoria}
+                  onChange={e => setEditCategoria(e.target.value)}
+                >
+                  <option value="">📂 Sin categoría</option>
+                  {CATEGORIAS.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.label}</option>
+                  ))}
+                </select>
+              </div>
               <div className={styles.modalGrupo}>
                 <label className={styles.modalLabel}>Prioridad</label>
                 <select
