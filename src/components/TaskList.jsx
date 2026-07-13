@@ -168,16 +168,6 @@ export default function TaskList() {
           <i className="ti ti-layout-columns" aria-hidden="true" /> Kanban
         </button>
       </div>
-
-      {/* Contenido según vista */}
-      {vista === 'kanban' ? (
-        <Kanban />
-      ) : (
-        <>
-          {/* Filtro por categoría */}
-          {/* ...todo el contenido actual de lista... */}
-        </>
-      )}
       {/* Filtros */}
       <div className={styles.filtros}>
         {[
@@ -380,6 +370,16 @@ export default function TaskList() {
           </div>
         )}
       </ul>
+      
+      {/* Contenido según vista */}
+      {vista === 'kanban' ? (
+        <Kanban />
+      ) : (
+        <>
+          {/* Filtro por categoría */}
+          {/* ...todo el contenido actual de lista... */}
+        </>
+      )}
 
       {/* Lista completadas */}
       {completadas.length > 0 && (
