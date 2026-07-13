@@ -1,76 +1,87 @@
 import { useEffect, useState } from "react";
 
 export function usePomodoro() {
-  const WORK_TIME = 25 * 60;
-  const BREAK_TIME = 5 * 60;
+  const WORK_TIME       = 25 * 60
+  const BREAK_SHORT     = 5  * 60
+  const BREAK_LONG      = 15 * 60
+  const POMODOROS_HASTA_LARGO = 4
 
-  const [secondsLeft, setSecondsLeft] = useState(WORK_TIME);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isBreak, setIsBreak] = useState(false);
+  const [secondsLeft, setSecondsLeft]     = useState(WORK_TIME)
+  const [isRunning, setIsRunning]         = useState(false)
+  const [isBreak, setIsBreak]             = useState(false)
+  const [isLongBreak, setIsLongBreak]     = useState(false)
+  const [pomodorosCompletados, setPomodorosCompletados] = useState(0)
+
+  const duracionTotal = isLongBreak ? BREAK_LONG : isBreak ? BREAK_SHORT : WORK_TIME
+  const progreso = ((duracionTotal - secondsLeft) / duracionTotal) * 100
 
   useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning) return
 
     const interval = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          if (
-            "Notification" in window &&
-            Notification.permission === "granted"
-          ) {
-            new Notification(
-              isBreak ? "✅ Descanso terminado" : "🍅 Pomodoro completado",
-              {
-                body: isBreak
-                  ? "Es hora de volver al trabajo."
-                  : "Tómate un descanso de 5 minutos.",
-              },
-            );
-          }
+      setSecondsLeft(prev => {
+        if (prev > 1) return prev - 1
 
-          if (isBreak) {
-            setIsBreak(false);
-            return WORK_TIME;
-          }
+        // Tiempo terminado
+        const nuevosPomodoros = isBreak ? pomodorosCompletados : pomodorosCompletados + 1
 
-          setIsBreak(true);
-          return BREAK_TIME;
+        if (!isBreak) {
+          // Terminó un pomodoro de trabajo
+          setPomodorosCompletados(nuevosPomodoros)
+          const esLargo = nuevosPomodoros % POMODOROS_HASTA_LARGO === 0
+          setIsBreak(true)
+          setIsLongBreak(esLargo)
+
+          notify(
+            '🍅 Pomodoro completado',
+            esLargo
+              ? `¡Excelente! Completaste ${nuevosPomodoros} pomodoros. Tómate 15 minutos.`
+              : 'Tómate un descanso de 5 minutos.'
+          )
+          return esLargo ? BREAK_LONG : BREAK_SHORT
+        } else {
+          // Terminó el descanso
+          setIsBreak(false)
+          setIsLongBreak(false)
+          notify('✅ Descanso terminado', 'Es hora de volver al trabajo.')
+          return WORK_TIME
         }
+      })
+    }, 1000)
 
-        return prev - 1;
-      });
-    }, 1000);
+    return () => clearInterval(interval)
+  }, [isRunning, isBreak, pomodorosCompletados, WORK_TIME, BREAK_SHORT, BREAK_LONG])
 
-    return () => clearInterval(interval);
-  }, [isRunning, isBreak, WORK_TIME, BREAK_TIME]);
-
-  function start() {
-    setIsRunning(true);
+  function notify(titulo, cuerpo) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(titulo, { body: cuerpo, icon: '/vite.svg' })
+    }
   }
 
-  function pause() {
-    setIsRunning(false);
-  }
+  function start()  { setIsRunning(true) }
+  function pause()  { setIsRunning(false) }
 
   function reset() {
-    setIsRunning(false);
-    setIsBreak(false);
-    setSecondsLeft(WORK_TIME);
+    setIsRunning(false)
+    setIsBreak(false)
+    setIsLongBreak(false)
+    setSecondsLeft(WORK_TIME)
+    setPomodorosCompletados(0)
   }
 
   function formatTime() {
-    const minutes = Math.floor(secondsLeft / 60);
-    const seconds = secondsLeft % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    const m = Math.floor(secondsLeft / 60)
+    const s = secondsLeft % 60
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
   }
 
   return {
-    secondsLeft,
+    formatTime,
     isRunning,
     isBreak,
-    start,
-    pause,
-    reset,
-    formatTime,
-  };
+    isLongBreak,
+    progreso,
+    pomodorosCompletados,
+    start, pause, reset,
+  }
 }

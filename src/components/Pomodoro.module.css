@@ -1,58 +1,119 @@
-
-.card{
-
-    max-width:400px;
-
-    margin:auto;
-
-    padding:25px;
-
-    border-radius:15px;
-
-    background:var(--color-surface);
-
-    border:1px solid var(--color-border);
-
-    text-align:center;
-
+.wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
 }
 
-.timer{
-
-    font-size:64px;
-
-    font-weight:bold;
-
-    margin:20px 0;
-
+.card {
+    width: 100%;
+    max-width: 380px;
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
-.estado{
-
-    color:var(--color-text-muted);
-
-    margin-top:10px;
-
+.titulo {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
 }
 
-.buttons{
-
-    display:flex;
-
-    justify-content:center;
-
-    gap:10px;
-
+.estado {
+    font-size: 15px;
+    font-weight: 500;
 }
 
-.buttons button{
+.dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
 
-    padding:10px 20px;
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
 
-    border:none;
+.pomodoroCount {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: -6px;
+}
 
-    border-radius:10px;
+.progressBar {
+    width: 100%;
+    height: 6px;
+    background: var(--color-border);
+    border-radius: 20px;
+    overflow: hidden;
+}
 
-    cursor:pointer;
+.progressFill {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 1s linear;
+}
 
+.timer {
+    font-size: 72px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+    transition: color 0.3s;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btnPrimary {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: opacity 0.15s;
+}
+
+.btnPrimary:hover {
+    opacity: 0.85;
+}
+
+.btnSecondary {
+    padding: 10px 20px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 10px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 14px;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.btnSecondary:hover {
+    background: var(--color-bg);
+}
+
+@media (max-width: 480px) {
+    .timer {
+        font-size: 56px;
+    }
+
+    .card {
+        padding: 1.5rem 1rem;
+    }
 }
