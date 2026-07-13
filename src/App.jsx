@@ -4,6 +4,7 @@ import HabitTab from './components/HabitTab'
 import TaskList from './components/TaskList'
 import Estadisticas from './components/Estadisticas'
 import Calendario from './components/Calendario'
+import Podomoro from './components/Pomodoro'
 import { useState } from 'react'
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
       {tabActiva === 'tareas'        && <TaskList />}
       {tabActiva === 'estadisticas'  && <Estadisticas />}
       {tabActiva === 'calendario'    && <Calendario />}
+      {tabActiva === 'pomodoro'      && <Podomoro />}
     </div>
   )
 }

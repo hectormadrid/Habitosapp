@@ -33,6 +33,12 @@ export default function Tabs({ activa, onChange }) {
                     >
                         Calendario
                     </button>
+                    <button
+                        className={`${styles.tab} ${activa === 'pomodoro' ? styles.tabActiva : ''}`}
+                        onClick={() => onChange('pomodoro')}
+                    >
+                        Pomodoro
+                    </button>
                 </div>
 
                 <button
