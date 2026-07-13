@@ -5,6 +5,8 @@ import TaskList from './components/TaskList'
 import Estadisticas from './components/Estadisticas'
 import Calendario from './components/Calendario'
 import Podomoro from './components/Pomodoro'
+import Kanban from './components/Kanban'
+// En el return:
 import { useState } from 'react'
 
 export default function App() {
@@ -31,6 +33,7 @@ export default function App() {
       {tabActiva === 'estadisticas'  && <Estadisticas />}
       {tabActiva === 'calendario'    && <Calendario />}
       {tabActiva === 'pomodoro'      && <Podomoro />}
+      {tabActiva === 'kanban'        && <Kanban />}
     </div>
   )
 }

@@ -1,0 +1,199 @@
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+}
+
+.titulo {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+}
+
+/* ── Board ── */
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+/* ── Columna ── */
+
+.columna {
+    background: var(--color-bg);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    padding: 1rem;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.colHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.colEmoji {
+    font-size: 16px;
+}
+
+.colTitulo {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    flex: 1;
+}
+
+.colCount {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.tarjetas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ── Tarjeta ── */
+
+.tarjeta {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.tarjeta:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.tarjetaTexto {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.4;
+}
+
+.subtareaInfo {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.tarjetaMeta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.catTag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.prioTag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.alta {
+    background: var(--color-badge-high-bg);
+    color: var(--color-badge-high-fg);
+}
+
+.media {
+    background: var(--color-badge-med-bg);
+    color: var(--color-badge-med-fg);
+}
+
+.baja {
+    background: var(--color-badge-low-bg);
+    color: var(--color-badge-low-fg);
+}
+
+.fechaTag {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+}
+
+/* ── Acciones ── */
+
+.tarjetaActions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.moveBtn {
+    flex: 1;
+    padding: 5px 8px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.moveBtn:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.deleteBtn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-hint);
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+}
+
+.deleteBtn:hover {
+    color: #e24b4a;
+    background: var(--color-badge-high-bg);
+}
+
+/* ── Estado vacío ── */
+
+.empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--color-text-hint);
+    font-size: 13px;
+    border: 1.5px dashed var(--color-border);
+    border-radius: 8px;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 700px) {
+    .board {
+        grid-template-columns: 1fr;
+    }
+}

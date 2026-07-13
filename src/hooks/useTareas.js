@@ -84,6 +84,7 @@ export function useTareas() {
       notificado: false,
       categoria: categoria || "",
       subtareas: [],
+      estado: "pendiente", // Pendiente, en progreso, completada
       // Preparado para futuras mejoras
       descripcion: "",
       favorita: false,
@@ -153,6 +154,20 @@ export function useTareas() {
           ? {
               ...t,
               subtareas: (t.subtareas || []).filter((s) => s.id !== subtareaId),
+            }
+          : t,
+      ),
+    );
+  }
+
+  function moverTarea(id, nuevoEstado) {
+    setTareas((prev) =>
+      prev.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              estado: nuevoEstado,
+              completada: nuevoEstado === "completada",
             }
           : t,
       ),
@@ -250,5 +265,6 @@ export function useTareas() {
     setCategoriaFiltro,
     filtrarPorCategoria,
     CATEGORIAS,
+    moverTarea,
   };
 }
