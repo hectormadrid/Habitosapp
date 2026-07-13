@@ -516,3 +516,42 @@
   border-radius: 20px;
   flex-shrink: 0;
 }
+
+/* ── Toggle de vista ── */
+
+.vistaToggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1.25rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.vistaBtn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s, color 0.15s;
+  font-family: inherit;
+}
+
+.vistaBtn:hover {
+  color: var(--color-text);
+}
+
+.vistaBtnActivo {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}

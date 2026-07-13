@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useTareas } from '../hooks/useTareas'
 import styles from './TaskList.module.css'
-
+import Kanban from './Kanban'
 export default function TaskList() {
   const {
     tareas,
@@ -40,6 +40,7 @@ export default function TaskList() {
   const [anticipacion, setAnticipacion] = useState(60)
   const [filtro, setFiltro] = useState('todas')
   const [categoria, setCategoria] = useState('')
+  const [vista, setVista] = useState('lista') // 'lista' | 'kanban'
 
   const [editando, setEditando] = useState(null)
   const [editTexto, setEditTexto] = useState('')
@@ -96,7 +97,7 @@ export default function TaskList() {
       fechaLimite: editFecha,
       horaTarea: editTieneHora ? editHora : null,
       anticipacion: editTieneHora ? editAnticipacion : null,
-      categoria: editCategoria || "",  
+      categoria: editCategoria || "",
     })
     setEditando(null)
   }
@@ -152,6 +153,31 @@ export default function TaskList() {
           </button>
         ))}
       </div>
+      {/* Toggle de vista */}
+      <div className={styles.vistaToggle}>
+        <button
+          className={`${styles.vistaBtn} ${vista === 'lista' ? styles.vistaBtnActivo : ''}`}
+          onClick={() => setVista('lista')}
+        >
+          <i className="ti ti-list" aria-hidden="true" /> Lista
+        </button>
+        <button
+          className={`${styles.vistaBtn} ${vista === 'kanban' ? styles.vistaBtnActivo : ''}`}
+          onClick={() => setVista('kanban')}
+        >
+          <i className="ti ti-layout-columns" aria-hidden="true" /> Kanban
+        </button>
+      </div>
+
+      {/* Contenido según vista */}
+      {vista === 'kanban' ? (
+        <Kanban />
+      ) : (
+        <>
+          {/* Filtro por categoría */}
+          {/* ...todo el contenido actual de lista... */}
+        </>
+      )}
       {/* Filtros */}
       <div className={styles.filtros}>
         {[

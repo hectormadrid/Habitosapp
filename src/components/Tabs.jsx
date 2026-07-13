@@ -39,12 +39,6 @@ export default function Tabs({ activa, onChange }) {
                     >
                         Pomodoro
                     </button>
-                    <button
-                        className={`${styles.tab} ${activa === 'kanban' ? styles.tabActiva : ''}`}
-                        onClick={() => onChange('kanban')}
-                    >
-                        Kanban
-                    </button>
                 </div>
 
                 <button
