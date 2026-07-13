@@ -2,6 +2,8 @@ import { useTareas } from '../hooks/useTareas'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import styles from './Kanban.module.css'
+import { useState } from 'react'
+
 
 const COLUMNAS = [
     { id: 'pendiente', label: 'Por hacer', emoji: '📋', color: '#3b4ef8' },
@@ -11,7 +13,7 @@ const COLUMNAS = [
 
 export default function Kanban() {
     const { tareas, moverTarea, eliminarTarea, CATEGORIAS } = useTareas()
-
+    const [tareaDetalle, setTareaDetalle] = useState(null)
     function getTareasPorEstado(estado) {
         return tareas.filter(t => (t.estado || 'pendiente') === estado)
     }
@@ -107,6 +109,14 @@ export default function Kanban() {
                                                     </button>
                                                 )}
                                                 <button
+                                                    className={styles.infoBtn}
+                                                    onClick={() => setTareaDetalle(tarea)}
+                                                    aria-label="Ver detalles"
+                                                    title="Ver detalles"
+                                                >
+                                                    <i className="ti ti-info-circle" aria-hidden="true" />
+                                                </button>
+                                                <button
                                                     className={styles.deleteBtn}
                                                     onClick={() => eliminarTarea(tarea.id)}
                                                     aria-label="Eliminar"
@@ -118,6 +128,118 @@ export default function Kanban() {
                                     )
                                 })}
                             </div>
+                            {/* Modal de detalles */}
+                            {tareaDetalle && (
+                                <div className={styles.modalBackdrop} onClick={e => e.target === e.currentTarget && setTareaDetalle(null)}>
+                                    <div className={styles.modal}>
+
+                                        <div className={styles.modalHeader}>
+                                            <h3 className={styles.modalTitulo}>{tareaDetalle.texto}</h3>
+                                            <button className={styles.cerrarBtn} onClick={() => setTareaDetalle(null)}>✕</button>
+                                        </div>
+
+                                        <div className={styles.modalBody}>
+
+                                            {/* Prioridad */}
+                                            <div className={styles.detalleRow}>
+                                                <span className={styles.detalleLabel}>Prioridad</span>
+                                                <span className={`${styles.prioTag} ${styles[tareaDetalle.prioridad]}`}>
+                                                    {tareaDetalle.prioridad}
+                                                </span>
+                                            </div>
+
+                                            {/* Categoría */}
+                                            {tareaDetalle.categoria && (() => {
+                                                const cat = getCategoria(tareaDetalle.categoria)
+                                                return cat ? (
+                                                    <div className={styles.detalleRow}>
+                                                        <span className={styles.detalleLabel}>Categoría</span>
+                                                        <span className={styles.catTag} style={{ background: cat.bg, color: cat.color }}>
+                                                            {cat.label}
+                                                        </span>
+                                                    </div>
+                                                ) : null
+                                            })()}
+
+                                            {/* Estado */}
+                                            <div className={styles.detalleRow}>
+                                                <span className={styles.detalleLabel}>Estado</span>
+                                                <span className={styles.detalleValor}>
+                                                    {COLUMNAS.find(c => c.id === (tareaDetalle.estado || 'pendiente'))?.emoji}{' '}
+                                                    {COLUMNAS.find(c => c.id === (tareaDetalle.estado || 'pendiente'))?.label}
+                                                </span>
+                                            </div>
+
+                                            {/* Fecha límite */}
+                                            {tareaDetalle.fechaLimite && (
+                                                <div className={styles.detalleRow}>
+                                                    <span className={styles.detalleLabel}>Fecha límite</span>
+                                                    <span className={styles.detalleValor}>
+                                                        📅 {format(new Date(`${tareaDetalle.fechaLimite}T00:00:00`), "dd 'de' MMMM yyyy", { locale: es })}
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            {/* Hora */}
+                                            {tareaDetalle.horaTarea && (
+                                                <div className={styles.detalleRow}>
+                                                    <span className={styles.detalleLabel}>Hora</span>
+                                                    <span className={styles.detalleValor}>⏰ {tareaDetalle.horaTarea}</span>
+                                                </div>
+                                            )}
+
+                                            {/* Recordatorio */}
+                                            {tareaDetalle.anticipacion && (
+                                                <div className={styles.detalleRow}>
+                                                    <span className={styles.detalleLabel}>Recordatorio</span>
+                                                    <span className={styles.detalleValor}>
+                                                        🔔 {tareaDetalle.anticipacion < 60
+                                                            ? `${tareaDetalle.anticipacion} min antes`
+                                                            : tareaDetalle.anticipacion === 1440
+                                                                ? '1 día antes'
+                                                                : `${tareaDetalle.anticipacion / 60}h antes`}
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            {/* Subtareas */}
+                                            {(tareaDetalle.subtareas || []).length > 0 && (
+                                                <div className={styles.detalleSubtareas}>
+                                                    <span className={styles.detalleLabel}>Subtareas</span>
+                                                    <ul className={styles.subtareasList}>
+                                                        {tareaDetalle.subtareas.map(s => (
+                                                            <li key={s.id} className={styles.subtareaItem}>
+                                                                <span className={`${styles.subtareaDot} ${s.completada ? styles.subtareaDotDone : ''}`}>
+                                                                    {s.completada ? '✓' : ''}
+                                                                </span>
+                                                                <span style={{ textDecoration: s.completada ? 'line-through' : 'none', color: s.completada ? 'var(--color-text-hint)' : 'var(--color-text)' }}>
+                                                                    {s.texto}
+                                                                </span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+
+                                            {/* Descripción */}
+                                            {tareaDetalle.descripcion && (
+                                                <div className={styles.detalleRow}>
+                                                    <span className={styles.detalleLabel}>Descripción</span>
+                                                    <span className={styles.detalleValor}>{tareaDetalle.descripcion}</span>
+                                                </div>
+                                            )}
+
+                                        </div>
+
+                                        <div className={styles.modalFooter}>
+                                            <button className={styles.cerrarBtnFooter} onClick={() => setTareaDetalle(null)}>
+                                                Cerrar
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )
                 })}
